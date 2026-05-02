@@ -350,6 +350,65 @@
     color: var(--text2);
   }
 
+  /* ── Settings Modal ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.72);
+    display: flex;
+    align-items: flex-end;
+    z-index: 200;
+    backdrop-filter: blur(6px);
+  }
+  .modal-overlay.hidden { display: none; }
+  .modal-box {
+    background: var(--bg2);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    padding-bottom: calc(var(--safe-bottom) + 8px);
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 12px;
+    border-bottom: 0.5px solid var(--sep);
+  }
+  .modal-title { font-size: 17px; font-weight: 600; }
+  .modal-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .modal-desc { font-size: 14px; color: var(--text2); line-height: 1.6; }
+  .modal-link { font-size: 14px; color: var(--blue); text-decoration: none; }
+  .modal-label { font-size: 13px; color: var(--text3); }
+  .modal-input {
+    background: var(--bg3);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: monospace;
+    width: 100%;
+    outline: none;
+    -webkit-appearance: none;
+  }
+  .modal-footer {
+    display: flex;
+    gap: 12px;
+    padding: 4px 16px 8px;
+  }
+  .modal-footer .btn-primary,
+  .modal-footer .btn-secondary {
+    max-width: none;
+    flex: 1;
+    padding: 14px 8px;
+    font-size: 15px;
+  }
+
   /* ── Toast ── */
   #toast {
     position: fixed;
@@ -381,7 +440,7 @@
   <!-- Capture -->
   <div id="screen-capture" class="screen active">
     <div class="header">
-      <span></span>
+      <button class="header-btn" onclick="openSettings()">⚙️</button>
       <h1>レシートスキャナー</h1>
       <button class="header-btn" onclick="exportCSV()" title="CSV出力">📊</button>
     </div>
@@ -464,6 +523,27 @@
     </div>
   </div>
 
+</div>
+
+<!-- Settings Modal -->
+<div id="modal-settings" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">⚙️ 設定</span>
+      <button class="header-btn" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">Gemini APIキーを設定すると、レシートの<strong>日付・金額・店舗名</strong>を高精度で自動認識します（無料）。</p>
+      <a class="modal-link" href="https://aistudio.google.com/app/apikey" target="_blank">→ Google AI Studio で無料APIキーを取得</a>
+      <span class="modal-label">Gemini APIキー</span>
+      <input type="password" id="input-apikey" class="modal-input" placeholder="AIzaSy..." autocomplete="off" spellcheck="false">
+      <p id="apikey-status" style="font-size:12px;color:var(--text3);min-height:16px"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeSettings()">キャンセル</button>
+      <button class="btn-primary" onclick="saveSettings()">保存</button>
+    </div>
+  </div>
 </div>
 
 <!-- Loading overlay -->
@@ -901,112 +981,122 @@ function saveImage() {
   }
 }
 
-// ── OCR (Tesseract.js) ──
-function ensureTesseract() {
-  return new Promise((resolve, reject) => {
-    if (typeof Tesseract !== 'undefined') { resolve(); return; }
-    const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
-    s.onload  = resolve;
-    s.onerror = () => reject(new Error('Tesseract.js の読み込みに失敗しました'));
-    document.head.appendChild(s);
-  });
+// ── Settings ──
+const SETTINGS_KEY = 'app_settings';
+function getSettings() {
+  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}'); }
+  catch { return {}; }
+}
+function getApiKey() { return getSettings().geminiKey || ''; }
+
+function openSettings() {
+  const key = getApiKey();
+  document.getElementById('input-apikey').value = key;
+  document.getElementById('apikey-status').textContent =
+    key ? '✅ APIキーが設定されています' : '';
+  document.getElementById('modal-settings').classList.remove('hidden');
+}
+function closeSettings() {
+  document.getElementById('modal-settings').classList.add('hidden');
+}
+function saveSettings() {
+  const key = document.getElementById('input-apikey').value.trim();
+  const s = getSettings();
+  s.geminiKey = key;
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+  closeSettings();
+  toast(key ? '✅ APIキーを保存しました' : 'APIキーを削除しました');
 }
 
+// ── OCR ──
 async function runOCR() {
   const btn  = document.getElementById('ocr-btn');
   const prog = document.getElementById('ocr-progress');
   btn.disabled = true;
   btn.textContent = '…';
-  prog.textContent = '初回はデータダウンロード（約15MB）が必要です';
 
+  const canvas = document.getElementById('canvas-result');
+  const apiKey = getApiKey();
+
+  if (!apiKey) {
+    prog.textContent = '⚙️ APIキー未設定 — 画面左上の⚙️から設定してください';
+    setTimeout(() => { prog.textContent = ''; }, 6000);
+    btn.disabled = false;
+    btn.textContent = '🔍 認識';
+    return;
+  }
+
+  prog.textContent = 'Gemini AIで解析中…';
   try {
-    await ensureTesseract();
-    prog.textContent = '解析中…';
+    const result = await callGeminiOCR(canvas, apiKey);
+    const filled = [];
 
-    const worker = await Tesseract.createWorker(['jpn', 'eng'], 1, {
-      logger: m => {
-        if (m.status === 'recognizing text') {
-          prog.textContent = `解析中 ${Math.round(m.progress * 100)}%`;
-        }
-      }
-    });
-
-    // PSM 4 = 縦1列テキスト（レシートに最適）
-    await worker.setParameters({ tessedit_pageseg_mode: '4' });
-
-    // OCR精度向上のため最低1200px幅に拡大してから認識
-    const src = document.getElementById('canvas-result');
-    const scale = Math.max(1, 1200 / src.width);
-    const oc = document.createElement('canvas');
-    oc.width  = Math.round(src.width  * scale);
-    oc.height = Math.round(src.height * scale);
-    const octx = oc.getContext('2d');
-    octx.imageSmoothingEnabled = true;
-    octx.imageSmoothingQuality = 'high';
-    octx.drawImage(src, 0, 0, oc.width, oc.height);
-
-    const { data: { text } } = await worker.recognize(oc);
-    await worker.terminate();
-
-    const amount = extractAmountFromText(text);
-    if (amount) {
-      document.getElementById('meta-amount').value = amount;
-      refreshFilename();
-      prog.textContent = `¥${parseInt(amount).toLocaleString()} を認識しました ✓`;
-    } else {
-      prog.textContent = '金額を認識できませんでした。手動で入力してください。';
+    if (result.amount != null) {
+      document.getElementById('meta-amount').value = String(result.amount);
+      filled.push(`¥${parseInt(result.amount).toLocaleString()}`);
     }
+    if (result.date) {
+      document.getElementById('meta-date').value = result.date;
+      filled.push(result.date);
+    }
+    refreshFilename();
+
+    prog.textContent = filled.length
+      ? `認識完了 ✓ ${filled.join(' · ')}`
+      : '認識できませんでした。手動で入力してください。';
     setTimeout(() => { prog.textContent = ''; }, 5000);
   } catch(e) {
-    prog.textContent = '失敗: ' + e.message;
-    setTimeout(() => { prog.textContent = ''; }, 5000);
+    const msg = e.message.includes('API_KEY_INVALID')
+      ? 'APIキーが無効です。⚙️から確認してください。'
+      : '失敗: ' + e.message;
+    prog.textContent = msg;
+    setTimeout(() => { prog.textContent = ''; }, 7000);
   } finally {
     btn.disabled = false;
     btn.textContent = '🔍 認識';
   }
 }
 
-function extractAmountFromText(text) {
-  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+async function callGeminiOCR(canvas, apiKey) {
+  // 画像をbase64に変換（最大1200px幅に縮小してAPI負荷を下げる）
+  const maxW = 1200;
+  const scale = Math.min(1, maxW / canvas.width);
+  const oc = document.createElement('canvas');
+  oc.width  = Math.round(canvas.width  * scale);
+  oc.height = Math.round(canvas.height * scale);
+  oc.getContext('2d').drawImage(canvas, 0, 0, oc.width, oc.height);
+  const base64 = oc.toDataURL('image/jpeg', 0.85).split(',')[1];
 
-  // OCRで「1, 660」「1.660」「1 660」のように崩れた数字を正規化して数値化
-  function parseAmounts(line) {
-    // ¥/￥/円 を除去してから処理
-    const s = line.replace(/[¥￥円]/g, ' ');
-    // 数字＋カンマ・ピリオド・スペースの連続をまとめて取得（例: "1, 660" → "1, 660"）
-    const raw = s.match(/\d[\d,.\s]*\d|\d{1,}/g) || [];
-    return raw
-      .map(m => parseInt(m.replace(/[,.\s]/g, ''), 10))
-      .filter(n => Number.isFinite(n) && n >= 10 && n < 10_000_000);
-  }
+  const prompt =
+    'このレシート画像を読み取り、次のJSONだけを返してください（説明・コードブロック不要）:\n' +
+    '{"amount": 税込合計金額(整数), "date": "YYYY-MM-DD", "store": "店舗名"}\n' +
+    '不明な項目はnullにしてください。';
 
-  // 合計・税込 などのキーワード行から取得（優先順）
-  const totalKws = ['合計', '税込', 'お支払', '請求', 'ご請求'];
-  for (const kw of totalKws) {
-    for (const line of lines) {
-      if (line.includes(kw)) {
-        const vals = parseAmounts(line);
-        if (vals.length) return String(Math.max(...vals));
-      }
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [
+          { text: prompt },
+          { inline_data: { mime_type: 'image/jpeg', data: base64 } }
+        ]}],
+        generationConfig: { temperature: 0, maxOutputTokens: 256 }
+      })
     }
+  );
+
+  const data = await res.json();
+  if (!res.ok) {
+    const msg = data.error?.message || `HTTP ${res.status}`;
+    throw new Error(msg);
   }
 
-  // ¥NNNN パターン（スペースや区切り文字を含む）
-  const yenMatches = text.match(/[¥￥]\s*[\d,.\s]+/g) || [];
-  const yenAmounts = yenMatches
-    .map(m => parseInt(m.replace(/[¥￥\s,.]/g, ''), 10))
-    .filter(n => n >= 100 && n <= 999999)
-    .sort((a, b) => b - a);
-  if (yenAmounts.length) return String(yenAmounts[0]);
-
-  // 最終手段: 全行から妥当な金額の最大値
-  const allVals = lines.flatMap(parseAmounts)
-    .filter(n => n >= 100 && n <= 999999)
-    .sort((a, b) => b - a);
-  if (allVals.length) return String(allVals[0]);
-
-  return null;
+  const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  const m   = raw.match(/\{[\s\S]*?\}/);
+  if (!m) throw new Error('レスポンスを解析できませんでした');
+  return JSON.parse(m[0]);
 }
 
 // ── CSV ──
