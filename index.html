@@ -280,6 +280,23 @@
   }
   .meta-label { min-width: 90px; }
   .meta-filename { font-size: 12px; color: var(--text2); }
+  .ocr-btn {
+    background: var(--bg3);
+    border: none;
+    border-radius: 8px;
+    color: var(--text2);
+    font-size: 12px;
+    font-family: inherit;
+    padding: 5px 10px;
+    min-height: 30px;
+    cursor: pointer;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity 0.15s;
+  }
+  .ocr-btn:active { opacity: 0.7; }
+  .ocr-btn:disabled { opacity: 0.35; }
+  #ocr-progress { font-size: 11px; color: var(--text3); text-align: center; min-height: 14px; }
   /* iOSスタイルトグル */
   .toggle-wrap { display: flex; align-items: center; margin-left: auto; }
   .toggle-input { position: absolute; opacity: 0; width: 0; height: 0; }
@@ -366,7 +383,7 @@
     <div class="header">
       <span></span>
       <h1>レシートスキャナー</h1>
-      <span></span>
+      <button class="header-btn" onclick="exportCSV()" title="CSV出力">📊</button>
     </div>
     <div class="capture-body">
       <div class="capture-icon">🧾</div>
@@ -432,6 +449,7 @@
         <div class="meta-row">
           <span class="meta-label">金額（税込）</span>
           <input type="text" inputmode="numeric" pattern="[0-9]*" id="meta-amount" class="meta-input" placeholder="例：420" oninput="refreshFilename()" onchange="refreshFilename()">
+          <button class="ocr-btn" id="ocr-btn" onclick="runOCR()">🔍 認識</button>
         </div>
         <div class="meta-row">
           <span class="meta-label">ファイル名</span>
@@ -442,6 +460,7 @@
         <button id="btn-save" class="btn-primary" onclick="saveImage()" disabled>💾 保存</button>
       </div>
       <div class="hint" id="save-hint"></div>
+      <div id="ocr-progress" class="hint"></div>
     </div>
   </div>
 
@@ -870,6 +889,8 @@ function saveImage() {
   for (let i = 0; i < bin.length; i++) ia[i] = bin.charCodeAt(i);
   const blob = new Blob([ab], { type: 'image/jpeg' });
 
+  appendRecord();   // CSV に自動追記
+
   const file = new File([blob], filename, { type: 'image/jpeg' });
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
     navigator.share({ files: [file] })
@@ -878,6 +899,130 @@ function saveImage() {
   } else {
     fallbackDownload(blob, filename);
   }
+}
+
+// ── OCR (Tesseract.js) ──
+function ensureTesseract() {
+  return new Promise((resolve, reject) => {
+    if (typeof Tesseract !== 'undefined') { resolve(); return; }
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+    s.onload  = resolve;
+    s.onerror = () => reject(new Error('Tesseract.js の読み込みに失敗しました'));
+    document.head.appendChild(s);
+  });
+}
+
+async function runOCR() {
+  const btn  = document.getElementById('ocr-btn');
+  const prog = document.getElementById('ocr-progress');
+  btn.disabled = true;
+  btn.textContent = '…';
+  prog.textContent = '初回はデータダウンロード（約15MB）が必要です';
+
+  try {
+    await ensureTesseract();
+    prog.textContent = '解析中…';
+
+    const worker = await Tesseract.createWorker(['jpn', 'eng'], 1, {
+      logger: m => {
+        if (m.status === 'recognizing text') {
+          prog.textContent = `解析中 ${Math.round(m.progress * 100)}%`;
+        }
+      }
+    });
+    const canvas = document.getElementById('canvas-result');
+    const { data: { text } } = await worker.recognize(canvas);
+    await worker.terminate();
+
+    const amount = extractAmountFromText(text);
+    if (amount) {
+      document.getElementById('meta-amount').value = amount;
+      refreshFilename();
+      prog.textContent = `¥${parseInt(amount).toLocaleString()} を認識しました ✓`;
+    } else {
+      prog.textContent = '金額を認識できませんでした。手動で入力してください。';
+    }
+    setTimeout(() => { prog.textContent = ''; }, 5000);
+  } catch(e) {
+    prog.textContent = '失敗: ' + e.message;
+    setTimeout(() => { prog.textContent = ''; }, 5000);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔍 認識';
+  }
+}
+
+function extractAmountFromText(text) {
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+
+  // 合計・税込 などのキーワードから金額を取得（優先順）
+  const totalKws = ['合計', '税込', 'お支払', '請求', 'ご請求', '計'];
+  for (const kw of totalKws) {
+    for (const line of lines) {
+      if (line.includes(kw)) {
+        const nums = line.match(/[\d,]+/g);
+        if (nums) {
+          const vals = nums
+            .map(n => parseInt(n.replace(/,/g, ''), 10))
+            .filter(n => n >= 10 && n < 10_000_000);
+          if (vals.length) return String(Math.max(...vals));
+        }
+      }
+    }
+  }
+  // ¥ / ￥ の直後の数値
+  const yenM = text.match(/[¥￥]\s*([\d,]+)/);
+  if (yenM) return yenM[1].replace(/,/g, '');
+
+  // 最大の妥当な金額（100〜999999円）
+  const candidates = (text.match(/[\d,]+/g) || [])
+    .map(n => parseInt(n.replace(/,/g, ''), 10))
+    .filter(n => n >= 100 && n <= 999999)
+    .sort((a, b) => b - a);
+  if (candidates.length) return String(candidates[0]);
+
+  return null;
+}
+
+// ── CSV ──
+const CSV_KEY = 'receipt_records';
+
+function loadRecords() {
+  try { return JSON.parse(localStorage.getItem(CSV_KEY) || '[]'); }
+  catch { return []; }
+}
+
+function appendRecord() {
+  const records = loadRecords();
+  records.push({
+    date:     document.getElementById('meta-date').value     || '',
+    expense:  document.getElementById('meta-expense').checked ? '○' : '',
+    category: document.getElementById('meta-category').value  || '',
+    payment:  document.getElementById('meta-payment').value   || '',
+    amount:   document.getElementById('meta-amount').value.trim(),
+    filename: document.getElementById('meta-filename').value.trim(),
+    savedAt:  new Date().toISOString().slice(0, 16).replace('T', ' '),
+  });
+  localStorage.setItem(CSV_KEY, JSON.stringify(records));
+}
+
+function exportCSV() {
+  const records = loadRecords();
+  if (!records.length) { toast('保存済みデータがありません'); return; }
+
+  const headers = ['日付', '経費', '内容', '支払い', '金額', 'ファイル名', '保存日時'];
+  const rows = records.map(r =>
+    [r.date, r.expense, r.category, r.payment, r.amount, r.filename, r.savedAt]
+  );
+  const csv = [headers, ...rows]
+    .map(row => row.map(c => `"${String(c ?? '').replace(/"/g, '""')}"`).join(','))
+    .join('\r\n');
+
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+  const name = `receipts_${new Date().toLocaleDateString('sv').replace(/-/g, '')}.csv`;
+  fallbackDownload(blob, name);
+  toast(`${records.length}件のデータをエクスポート`);
 }
 
 function fallbackDownload(blob, filename) {
