@@ -931,8 +931,22 @@ async function runOCR() {
         }
       }
     });
-    const canvas = document.getElementById('canvas-result');
-    const { data: { text } } = await worker.recognize(canvas);
+
+    // PSM 4 = 縦1列テキスト（レシートに最適）
+    await worker.setParameters({ tessedit_pageseg_mode: '4' });
+
+    // OCR精度向上のため最低1200px幅に拡大してから認識
+    const src = document.getElementById('canvas-result');
+    const scale = Math.max(1, 1200 / src.width);
+    const oc = document.createElement('canvas');
+    oc.width  = Math.round(src.width  * scale);
+    oc.height = Math.round(src.height * scale);
+    const octx = oc.getContext('2d');
+    octx.imageSmoothingEnabled = true;
+    octx.imageSmoothingQuality = 'high';
+    octx.drawImage(src, 0, 0, oc.width, oc.height);
+
+    const { data: { text } } = await worker.recognize(oc);
     await worker.terminate();
 
     const amount = extractAmountFromText(text);
@@ -956,31 +970,41 @@ async function runOCR() {
 function extractAmountFromText(text) {
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
 
-  // 合計・税込 などのキーワードから金額を取得（優先順）
-  const totalKws = ['合計', '税込', 'お支払', '請求', 'ご請求', '計'];
+  // OCRで「1, 660」「1.660」「1 660」のように崩れた数字を正規化して数値化
+  function parseAmounts(line) {
+    // ¥/￥/円 を除去してから処理
+    const s = line.replace(/[¥￥円]/g, ' ');
+    // 数字＋カンマ・ピリオド・スペースの連続をまとめて取得（例: "1, 660" → "1, 660"）
+    const raw = s.match(/\d[\d,.\s]*\d|\d{1,}/g) || [];
+    return raw
+      .map(m => parseInt(m.replace(/[,.\s]/g, ''), 10))
+      .filter(n => Number.isFinite(n) && n >= 10 && n < 10_000_000);
+  }
+
+  // 合計・税込 などのキーワード行から取得（優先順）
+  const totalKws = ['合計', '税込', 'お支払', '請求', 'ご請求'];
   for (const kw of totalKws) {
     for (const line of lines) {
       if (line.includes(kw)) {
-        const nums = line.match(/[\d,]+/g);
-        if (nums) {
-          const vals = nums
-            .map(n => parseInt(n.replace(/,/g, ''), 10))
-            .filter(n => n >= 10 && n < 10_000_000);
-          if (vals.length) return String(Math.max(...vals));
-        }
+        const vals = parseAmounts(line);
+        if (vals.length) return String(Math.max(...vals));
       }
     }
   }
-  // ¥ / ￥ の直後の数値
-  const yenM = text.match(/[¥￥]\s*([\d,]+)/);
-  if (yenM) return yenM[1].replace(/,/g, '');
 
-  // 最大の妥当な金額（100〜999999円）
-  const candidates = (text.match(/[\d,]+/g) || [])
-    .map(n => parseInt(n.replace(/,/g, ''), 10))
+  // ¥NNNN パターン（スペースや区切り文字を含む）
+  const yenMatches = text.match(/[¥￥]\s*[\d,.\s]+/g) || [];
+  const yenAmounts = yenMatches
+    .map(m => parseInt(m.replace(/[¥￥\s,.]/g, ''), 10))
     .filter(n => n >= 100 && n <= 999999)
     .sort((a, b) => b - a);
-  if (candidates.length) return String(candidates[0]);
+  if (yenAmounts.length) return String(yenAmounts[0]);
+
+  // 最終手段: 全行から妥当な金額の最大値
+  const allVals = lines.flatMap(parseAmounts)
+    .filter(n => n >= 100 && n <= 999999)
+    .sort((a, b) => b - a);
+  if (allVals.length) return String(allVals[0]);
 
   return null;
 }
