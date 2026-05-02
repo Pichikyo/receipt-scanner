@@ -968,6 +968,12 @@ function updateSaveBtn(){
   btn.textContent=isDropboxConnected()?'💾 Dropboxに保存':'💾 保存';
 }
 
+// JSON.stringify で非ASCII文字をUnicodeエスケープ（HTTPヘッダーはASCII限定）
+function jsonAscii(obj){
+  return JSON.stringify(obj).replace(/[^\x00-\x7F]/g,
+    c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'));
+}
+
 async function uploadToDropbox(blob,filename){
   const token=await getValidAccessToken();
   if(!token) throw new Error('再接続してください');
@@ -980,7 +986,7 @@ async function uploadToDropbox(blob,filename){
     headers:{
       'Authorization':'Bearer '+token,
       'Content-Type':'application/octet-stream',
-      'Dropbox-API-Arg':JSON.stringify({path,mode:'add',autorename:true,mute:false}),
+      'Dropbox-API-Arg':jsonAscii({path,mode:'add',autorename:true,mute:false}),
     },
     body:blob,
   });
