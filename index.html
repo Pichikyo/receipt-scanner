@@ -88,10 +88,8 @@
   }
   .dbx-dot {
     position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 8px;
-    height: 8px;
+    top: 6px; right: 6px;
+    width: 8px; height: 8px;
     border-radius: 50%;
     background: var(--green);
     display: none;
@@ -113,9 +111,7 @@
     width: 96px; height: 96px;
     background: var(--bg3);
     border-radius: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     font-size: 48px;
   }
   .capture-title { font-size: 22px; font-weight: 700; text-align: center; letter-spacing: -0.4px; }
@@ -134,10 +130,7 @@
     width: 100%;
     max-width: 320px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
     -webkit-tap-highlight-color: transparent;
     transition: opacity 0.15s;
   }
@@ -156,10 +149,7 @@
     width: 100%;
     max-width: 320px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
     -webkit-tap-highlight-color: transparent;
     transition: opacity 0.15s;
   }
@@ -168,19 +158,14 @@
   /* ── Adjust ── */
   #screen-adjust { background: #000; }
   .canvas-wrap {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    flex: 1; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
   }
   #canvas-adjust { max-width: 100%; max-height: 100%; object-fit: contain; touch-action: none; }
   .adjust-footer {
     background: var(--bg);
     padding: 16px;
-    display: flex;
-    gap: 12px;
+    display: flex; gap: 12px;
     border-top: 0.5px solid var(--sep);
   }
   .adjust-footer .btn-primary,
@@ -189,20 +174,15 @@
   /* ── Result ── */
   #screen-result { background: #000; }
   .result-canvas-wrap {
-    flex: 1;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    flex: 1; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
     background: #111;
   }
   #canvas-result { max-width: 100%; max-height: 100%; object-fit: contain; }
   .result-footer {
     background: var(--bg);
     padding: 12px 16px calc(16px + var(--safe-bottom));
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: flex; flex-direction: column; gap: 10px;
     border-top: 0.5px solid var(--sep);
   }
   .result-btns { display: flex; gap: 12px; }
@@ -212,35 +192,23 @@
   /* ── Metadata form ── */
   .meta-form { background: var(--bg2); border-radius: 12px; overflow: hidden; }
   .meta-row {
-    display: flex;
-    align-items: center;
-    padding: 11px 14px;
-    gap: 10px;
+    display: flex; align-items: center;
+    padding: 11px 14px; gap: 10px;
     border-bottom: 0.5px solid var(--sep);
   }
   .meta-row:last-child { border-bottom: none; }
   .meta-label { font-size: 15px; color: var(--text); min-width: 90px; flex-shrink: 0; }
   .meta-input, .meta-select {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    font-size: 15px;
-    color: var(--text);
-    text-align: right;
-    font-family: inherit;
-    min-width: 0;
+    flex: 1; background: transparent; border: none; outline: none;
+    font-size: 15px; color: var(--text);
+    text-align: right; font-family: inherit; min-width: 0;
   }
   .meta-input::placeholder { color: var(--text3); }
   .meta-input[type="date"] { color-scheme: dark; }
   .meta-select {
-    -webkit-appearance: none;
-    appearance: none;
-    cursor: pointer;
+    -webkit-appearance: none; appearance: none; cursor: pointer;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: left center;
-    padding-left: 16px;
+    background-repeat: no-repeat; background-position: left center; padding-left: 16px;
   }
   .meta-filename { font-size: 12px; color: var(--text2); }
 
@@ -248,22 +216,14 @@
   .toggle-wrap { display: flex; align-items: center; margin-left: auto; }
   .toggle-input { position: absolute; opacity: 0; width: 0; height: 0; }
   .toggle-track {
-    width: 51px; height: 31px;
-    background: var(--bg3);
-    border-radius: 16px;
-    position: relative;
-    transition: background 0.2s;
-    cursor: pointer;
-    flex-shrink: 0;
+    width: 51px; height: 31px; background: var(--bg3);
+    border-radius: 16px; position: relative; transition: background 0.2s;
+    cursor: pointer; flex-shrink: 0;
   }
   .toggle-track::after {
-    content: '';
-    position: absolute;
-    width: 27px; height: 27px;
-    background: #fff;
-    border-radius: 50%;
-    top: 2px; left: 2px;
-    transition: transform 0.2s;
+    content: ''; position: absolute;
+    width: 27px; height: 27px; background: #fff; border-radius: 50%;
+    top: 2px; left: 2px; transition: transform 0.2s;
     box-shadow: 0 1px 4px rgba(0,0,0,0.4);
   }
   .toggle-input:checked + .toggle-track { background: #34C759; }
@@ -271,24 +231,17 @@
 
   /* ── Loading overlay ── */
   #cv-overlay {
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background: rgba(0,0,0,0.82);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    z-index: 999;
-    backdrop-filter: blur(8px);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 16px;
+    z-index: 999; backdrop-filter: blur(8px);
   }
   #cv-overlay.hidden { display: none; }
   .spinner {
     width: 44px; height: 44px;
-    border: 3px solid var(--bg3);
-    border-top-color: var(--blue);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+    border: 3px solid var(--bg3); border-top-color: var(--blue);
+    border-radius: 50%; animation: spin 0.8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
   .cv-loading-text { font-size: 15px; color: var(--text2); }
@@ -297,78 +250,103 @@
   #toast {
     position: fixed;
     bottom: calc(var(--safe-bottom) + 80px);
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--bg3);
-    color: var(--text);
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-size: 14px;
-    opacity: 0;
-    transition: opacity 0.3s, transform 0.3s;
-    pointer-events: none;
-    white-space: nowrap;
-    z-index: 100;
+    left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--bg3); color: var(--text);
+    padding: 10px 20px; border-radius: 20px; font-size: 14px;
+    opacity: 0; transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none; white-space: nowrap; z-index: 100;
   }
   #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  /* ── Settings Modal ── */
+  /* ── Modals (shared) ── */
   .modal-overlay {
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background: rgba(0,0,0,0.55);
-    z-index: 300;
-    display: flex;
-    align-items: flex-end;
-    opacity: 0;
-    pointer-events: none;
+    display: flex; align-items: flex-end;
+    opacity: 0; pointer-events: none;
     transition: opacity 0.28s;
   }
-  .modal-overlay.open {
-    opacity: 1;
-    pointer-events: all;
-  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
   .modal-sheet {
-    width: 100%;
-    background: var(--bg2);
+    width: 100%; background: var(--bg2);
     border-radius: 18px 18px 0 0;
     padding-bottom: calc(24px + var(--safe-bottom));
     transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
   }
-  .modal-overlay.open .modal-sheet {
-    transform: translateY(0);
-  }
+  .modal-overlay.open .modal-sheet { transform: translateY(0); }
   .modal-drag-handle {
-    width: 36px; height: 4px;
-    background: var(--bg3);
-    border-radius: 2px;
-    margin: 10px auto 0;
+    width: 36px; height: 4px; background: var(--bg3);
+    border-radius: 2px; margin: 10px auto 0;
   }
   .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 16px 10px;
-    border-bottom: 0.5px solid var(--sep);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px 10px; border-bottom: 0.5px solid var(--sep);
   }
   .modal-header h2 { font-size: 17px; font-weight: 600; }
   .modal-body { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
   .setting-section-title {
-    font-size: 13px;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size: 13px; color: var(--text3);
+    text-transform: uppercase; letter-spacing: 0.5px;
     padding: 0 2px 6px;
   }
-  .dbx-status-badge {
-    font-size: 14px;
-    font-weight: 500;
-    margin-left: auto;
-  }
+  .dbx-status-badge { font-size: 14px; font-weight: 500; margin-left: auto; }
   .dbx-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
   .dbx-actions .btn-primary,
   .dbx-actions .btn-secondary { max-width: none; min-height: 48px; font-size: 16px; }
+
+  /* folder row in settings — tappable */
+  .meta-row.tappable { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .meta-row.tappable:active { background: var(--bg3); }
+  .folder-val {
+    flex: 1; text-align: right; font-size: 15px;
+    color: var(--text2); white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis; min-width: 0;
+  }
+  .chevron { color: var(--text3); font-size: 18px; flex-shrink: 0; margin-left: 2px; }
+
+  /* ── Folder browser modal ── */
+  #modal-folder { z-index: 400; }
+  #modal-folder .modal-sheet {
+    height: 70vh; display: flex; flex-direction: column;
+    padding-bottom: 0;
+  }
+  .folder-browser-header {
+    display: flex; align-items: center;
+    padding: 0 4px; border-bottom: 0.5px solid var(--sep);
+    min-height: 52px; flex-shrink: 0;
+  }
+  .folder-browser-header .header-btn { flex-shrink: 0; }
+  .folder-browser-path {
+    flex: 1; font-size: 14px; color: var(--text2);
+    text-align: center; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap;
+    padding: 0 4px;
+  }
+  .btn-here {
+    background: none; border: none;
+    color: var(--blue); font-size: 15px; font-weight: 600;
+    font-family: inherit;
+    padding: 8px 12px; min-height: 44px; min-width: 44px;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+    flex-shrink: 0; white-space: nowrap;
+  }
+  .folder-list {
+    flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding-bottom: calc(16px + var(--safe-bottom));
+  }
+  .folder-item {
+    display: flex; align-items: center;
+    padding: 14px 16px; gap: 12px;
+    border-bottom: 0.5px solid var(--sep);
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  .folder-item:active { background: var(--bg3); }
+  .folder-item:last-child { border-bottom: none; }
+  .folder-item-icon { font-size: 20px; flex-shrink: 0; }
+  .folder-item-name { flex: 1; font-size: 16px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .folder-item-chevron { color: var(--text3); font-size: 18px; flex-shrink: 0; }
+  .folder-msg { padding: 32px 16px; text-align: center; color: var(--text3); font-size: 15px; }
 
   input[type=file] { display: none; }
 </style>
@@ -475,7 +453,7 @@
 <div id="toast"></div>
 
 <!-- Settings Modal -->
-<div id="modal-settings" class="modal-overlay" onclick="onModalOverlayClick(event)">
+<div id="modal-settings" class="modal-overlay" onclick="onSettingsOverlayClick(event)">
   <div class="modal-sheet">
     <div class="modal-drag-handle"></div>
     <div class="modal-header">
@@ -490,9 +468,10 @@
             <span class="meta-label">状態</span>
             <span class="dbx-status-badge" id="dbx-status">未接続</span>
           </div>
-          <div class="meta-row" id="dbx-folder-row">
+          <div class="meta-row tappable" id="dbx-folder-row" onclick="openFolderBrowser()">
             <span class="meta-label">保存フォルダ</span>
-            <input type="text" id="dbx-folder" class="meta-input" placeholder="/receipts" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <span class="folder-val" id="dbx-folder-display">未設定</span>
+            <span class="chevron">›</span>
           </div>
         </div>
         <div class="dbx-actions">
@@ -500,6 +479,21 @@
           <button id="dbx-disconnect-btn" class="btn-secondary" onclick="disconnectDropbox()" style="display:none">切断</button>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Folder Browser Modal -->
+<div id="modal-folder" class="modal-overlay">
+  <div class="modal-sheet">
+    <div class="modal-drag-handle"></div>
+    <div class="folder-browser-header">
+      <button class="header-btn" onclick="folderBrowserBack()">‹ 戻る</button>
+      <div class="folder-browser-path" id="folder-browser-path">/ (ルート)</div>
+      <button class="btn-here" onclick="confirmFolder()">ここに保存</button>
+    </div>
+    <div class="folder-list" id="folder-list">
+      <div class="folder-msg">読み込み中...</div>
     </div>
   </div>
 </div>
@@ -523,8 +517,7 @@ function onCvReady() {
 function waitForCv() {
   const timer = setInterval(() => {
     if (typeof cv !== 'undefined' && typeof cv.Mat === 'function') {
-      clearInterval(timer);
-      onCvReady();
+      clearInterval(timer); onCvReady();
     }
   }, 200);
 }
@@ -583,13 +576,10 @@ function onFileSelected(e) {
 function initAdjust(img) {
   const canvas = document.getElementById('canvas-adjust');
   const wrap = canvas.parentElement;
-  const maxW = wrap.clientWidth;
-  const maxH = wrap.clientHeight;
+  const maxW = wrap.clientWidth, maxH = wrap.clientHeight;
   const scale = Math.min(maxW / img.width, maxH / img.height, 1);
-  const dw = Math.round(img.width  * scale);
-  const dh = Math.round(img.height * scale);
-  canvas.width  = dw;
-  canvas.height = dh;
+  const dw = Math.round(img.width * scale), dh = Math.round(img.height * scale);
+  canvas.width = dw; canvas.height = dh;
   adjustScale = scale;
   corners = detectReceipt(img, dw, dh);
   drawHandles(canvas, img);
@@ -598,276 +588,229 @@ function initAdjust(img) {
 // ── Receipt detection ──
 function detectReceipt(img, dw, dh) {
   const fallback = [
-    {x: dw*0.05, y: dh*0.05}, {x: dw*0.95, y: dh*0.05},
-    {x: dw*0.95, y: dh*0.95}, {x: dw*0.05, y: dh*0.95},
+    {x:dw*0.05,y:dh*0.05},{x:dw*0.95,y:dh*0.05},
+    {x:dw*0.95,y:dh*0.95},{x:dw*0.05,y:dh*0.95},
   ];
-  const MAX = 600;
-  const sc  = Math.min(MAX / dw, MAX / dh, 1);
-  const tw  = Math.round(dw * sc);
-  const th  = Math.round(dh * sc);
-  let src, gray, binary, kernel, contours, hierarchy;
+  const MAX=600, sc=Math.min(MAX/dw,MAX/dh,1);
+  const tw=Math.round(dw*sc), th=Math.round(dh*sc);
+  let src,gray,binary,kernel,contours,hierarchy;
   try {
-    src = cv.imread(drawImgToOffscreen(img, tw, th));
-    gray = new cv.Mat(); binary = new cv.Mat();
-    contours = new cv.MatVector(); hierarchy = new cv.Mat();
-    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-    cv.GaussianBlur(gray, gray, new cv.Size(7, 7), 0);
-    cv.threshold(gray, binary, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU);
-    const mean = cv.mean(binary);
-    if (mean[0] > 127) cv.bitwise_not(binary, binary);
-    kernel = cv.Mat.ones(5, 5, cv.CV_8U);
-    cv.morphologyEx(binary, binary, cv.MORPH_CLOSE, kernel);
-    cv.morphologyEx(binary, binary, cv.MORPH_OPEN,  kernel);
-    cv.findContours(binary, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
-    let maxArea = 0, maxIdx = -1;
-    for (let i = 0; i < contours.size(); i++) {
-      const a = cv.contourArea(contours.get(i));
-      if (a > maxArea) { maxArea = a; maxIdx = i; }
+    src=cv.imread(drawImgToOffscreen(img,tw,th));
+    gray=new cv.Mat(); binary=new cv.Mat();
+    contours=new cv.MatVector(); hierarchy=new cv.Mat();
+    cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY);
+    cv.GaussianBlur(gray,gray,new cv.Size(7,7),0);
+    cv.threshold(gray,binary,0,255,cv.THRESH_BINARY+cv.THRESH_OTSU);
+    const mean=cv.mean(binary);
+    if(mean[0]>127) cv.bitwise_not(binary,binary);
+    kernel=cv.Mat.ones(5,5,cv.CV_8U);
+    cv.morphologyEx(binary,binary,cv.MORPH_CLOSE,kernel);
+    cv.morphologyEx(binary,binary,cv.MORPH_OPEN,kernel);
+    cv.findContours(binary,contours,hierarchy,cv.RETR_EXTERNAL,cv.CHAIN_APPROX_SIMPLE);
+    let maxArea=0,maxIdx=-1;
+    for(let i=0;i<contours.size();i++){
+      const a=cv.contourArea(contours.get(i));
+      if(a>maxArea){maxArea=a;maxIdx=i;}
     }
-    if (maxIdx < 0 || maxArea < tw * th * 0.08) return fallback;
-    const cnt  = contours.get(maxIdx);
-    const hull = new cv.Mat();
-    cv.convexHull(cnt, hull, false, true);
-    const peri = cv.arcLength(hull, true);
-    let bestQuad = null;
-    for (const eps of [0.02, 0.04, 0.06, 0.08, 0.1, 0.15]) {
-      const approx = new cv.Mat();
-      cv.approxPolyDP(hull, approx, eps * peri, true);
-      if (approx.rows === 4) { bestQuad = approx; break; }
+    if(maxIdx<0||maxArea<tw*th*0.08) return fallback;
+    const cnt=contours.get(maxIdx), hull=new cv.Mat();
+    cv.convexHull(cnt,hull,false,true);
+    const peri=cv.arcLength(hull,true);
+    let bestQuad=null;
+    for(const eps of[0.02,0.04,0.06,0.08,0.1,0.15]){
+      const approx=new cv.Mat();
+      cv.approxPolyDP(hull,approx,eps*peri,true);
+      if(approx.rows===4){bestQuad=approx;break;}
       approx.delete();
     }
     hull.delete();
-    if (!bestQuad) return fallback;
-    const inv = dw / tw;
-    const pts = [];
-    for (let i = 0; i < 4; i++) {
-      pts.push({ x: bestQuad.data32S[i*2] * inv, y: bestQuad.data32S[i*2+1] * inv });
-    }
+    if(!bestQuad) return fallback;
+    const inv=dw/tw, pts=[];
+    for(let i=0;i<4;i++) pts.push({x:bestQuad.data32S[i*2]*inv,y:bestQuad.data32S[i*2+1]*inv});
     bestQuad.delete();
     return pts;
-  } catch(e) {
-    return fallback;
-  } finally {
-    if (src)       src.delete();
-    if (gray)      gray.delete();
-    if (binary)    binary.delete();
-    if (kernel)    kernel.delete();
-    if (contours)  contours.delete();
-    if (hierarchy) hierarchy.delete();
+  } catch(e) { return fallback; }
+  finally {
+    if(src) src.delete(); if(gray) gray.delete(); if(binary) binary.delete();
+    if(kernel) kernel.delete(); if(contours) contours.delete(); if(hierarchy) hierarchy.delete();
   }
 }
 
-function drawImgToOffscreen(img, w, h) {
-  const oc = document.createElement('canvas');
-  oc.width = w; oc.height = h;
-  oc.getContext('2d').drawImage(img, 0, 0, w, h);
+function drawImgToOffscreen(img,w,h){
+  const oc=document.createElement('canvas');
+  oc.width=w; oc.height=h;
+  oc.getContext('2d').drawImage(img,0,0,w,h);
   return oc;
 }
 
 // ── Draw handles ──
-function drawHandles(canvas, img) {
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+function drawHandles(canvas,img){
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(img,0,0,canvas.width,canvas.height);
   ctx.beginPath();
-  ctx.moveTo(corners[0].x, corners[0].y);
-  for (let i = 1; i < corners.length; i++) ctx.lineTo(corners[i].x, corners[i].y);
+  ctx.moveTo(corners[0].x,corners[0].y);
+  for(let i=1;i<corners.length;i++) ctx.lineTo(corners[i].x,corners[i].y);
   ctx.closePath();
-  ctx.strokeStyle = 'rgba(10,132,255,0.85)';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-  ctx.fillStyle = 'rgba(10,132,255,0.12)';
-  ctx.fill();
-  corners.forEach(p => {
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, 16, 0, Math.PI*2);
-    ctx.fillStyle = '#0A84FF';
-    ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2.5;
-    ctx.stroke();
+  ctx.strokeStyle='rgba(10,132,255,0.85)'; ctx.lineWidth=2; ctx.stroke();
+  ctx.fillStyle='rgba(10,132,255,0.12)'; ctx.fill();
+  corners.forEach(p=>{
+    ctx.beginPath(); ctx.arc(p.x,p.y,16,0,Math.PI*2);
+    ctx.fillStyle='#0A84FF'; ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=2.5; ctx.stroke();
   });
 }
 
 // ── Touch drag ──
-const adjustCanvas = document.getElementById('canvas-adjust');
-adjustCanvas.addEventListener('touchstart', onTouchStart, {passive: false});
-adjustCanvas.addEventListener('touchmove',  onTouchMove,  {passive: false});
-adjustCanvas.addEventListener('touchend',   onTouchEnd,   {passive: false});
-
-function canvasPos(canvas, touch) {
-  const r = canvas.getBoundingClientRect();
-  return {
-    x: (touch.clientX - r.left) * (canvas.width  / r.width),
-    y: (touch.clientY - r.top)  * (canvas.height / r.height),
-  };
+const adjustCanvas=document.getElementById('canvas-adjust');
+adjustCanvas.addEventListener('touchstart',onTouchStart,{passive:false});
+adjustCanvas.addEventListener('touchmove', onTouchMove, {passive:false});
+adjustCanvas.addEventListener('touchend',  onTouchEnd,  {passive:false});
+function canvasPos(canvas,touch){
+  const r=canvas.getBoundingClientRect();
+  return{x:(touch.clientX-r.left)*(canvas.width/r.width),y:(touch.clientY-r.top)*(canvas.height/r.height)};
 }
-function onTouchStart(e) {
+function onTouchStart(e){
   e.preventDefault();
-  const pos = canvasPos(this, e.touches[0]);
-  let minD = Infinity;
-  corners.forEach((p, i) => {
-    const d = Math.hypot(p.x - pos.x, p.y - pos.y);
-    if (d < minD) { minD = d; dragIdx = i; }
-  });
-  if (minD > 60) dragIdx = -1;
+  const pos=canvasPos(this,e.touches[0]); let minD=Infinity;
+  corners.forEach((p,i)=>{const d=Math.hypot(p.x-pos.x,p.y-pos.y);if(d<minD){minD=d;dragIdx=i;}});
+  if(minD>60) dragIdx=-1;
 }
-function onTouchMove(e) {
-  e.preventDefault();
-  if (dragIdx < 0) return;
-  const pos = canvasPos(this, e.touches[0]);
-  corners[dragIdx] = {
-    x: Math.max(0, Math.min(this.width,  pos.x)),
-    y: Math.max(0, Math.min(this.height, pos.y)),
-  };
-  drawHandles(this, srcImage);
+function onTouchMove(e){
+  e.preventDefault(); if(dragIdx<0) return;
+  const pos=canvasPos(this,e.touches[0]);
+  corners[dragIdx]={x:Math.max(0,Math.min(this.width,pos.x)),y:Math.max(0,Math.min(this.height,pos.y))};
+  drawHandles(this,srcImage);
 }
-function onTouchEnd(e) { e.preventDefault(); dragIdx = -1; }
+function onTouchEnd(e){e.preventDefault();dragIdx=-1;}
 
 // ── Order corners ──
-function orderCorners(pts) {
-  const cx = pts.reduce((s, p) => s + p.x, 0) / 4;
-  const cy = pts.reduce((s, p) => s + p.y, 0) / 4;
-  const pick = (arr, fb) => arr.length ? arr[0] : fb;
-  return [
-    pick(pts.filter(p => p.x < cx && p.y < cy),  {x:0, y:0}),
-    pick(pts.filter(p => p.x >= cx && p.y < cy), {x:pts[0].x, y:0}),
-    pick(pts.filter(p => p.x >= cx && p.y >= cy),{x:pts[0].x, y:pts[0].y}),
-    pick(pts.filter(p => p.x < cx && p.y >= cy), {x:0, y:pts[0].y}),
+function orderCorners(pts){
+  const cx=pts.reduce((s,p)=>s+p.x,0)/4, cy=pts.reduce((s,p)=>s+p.y,0)/4;
+  const pick=(arr,fb)=>arr.length?arr[0]:fb;
+  return[
+    pick(pts.filter(p=>p.x<cx&&p.y<cy),{x:0,y:0}),
+    pick(pts.filter(p=>p.x>=cx&&p.y<cy),{x:pts[0].x,y:0}),
+    pick(pts.filter(p=>p.x>=cx&&p.y>=cy),{x:pts[0].x,y:pts[0].y}),
+    pick(pts.filter(p=>p.x<cx&&p.y>=cy),{x:0,y:pts[0].y}),
   ];
 }
-function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y);}
 
 // ── Perspective correction ──
-function applyPerspective() {
-  if (!cvReady) { toast('OpenCV がまだ準備中です'); return; }
-  const rawPts = corners.map(p => ({ x: p.x / adjustScale, y: p.y / adjustScale }));
-  const [tl, tr, br, bl] = orderCorners(rawPts);
-  const outW = Math.round(Math.max(dist(tl,tr), dist(bl,br)));
-  const outH = Math.round(Math.max(dist(tl,bl), dist(tr,br)));
-  let srcMat, dstMat, srcPts, dstPts, M;
-  try {
-    srcMat = cv.imread(drawImgToOffscreen(srcImage, srcImage.width, srcImage.height));
-    srcPts = cv.matFromArray(4, 1, cv.CV_32FC2, [tl.x,tl.y, tr.x,tr.y, br.x,br.y, bl.x,bl.y]);
-    dstPts = cv.matFromArray(4, 1, cv.CV_32FC2, [0,0, outW,0, outW,outH, 0,outH]);
-    M = cv.getPerspectiveTransform(srcPts, dstPts);
-    dstMat = new cv.Mat();
-    cv.warpPerspective(srcMat, dstMat, M, new cv.Size(outW, outH), cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar());
-    const rc = document.getElementById('canvas-result');
-    rc.width = outW; rc.height = outH;
-    cv.imshow(rc, dstMat);
+function applyPerspective(){
+  if(!cvReady){toast('OpenCV がまだ準備中です');return;}
+  const rawPts=corners.map(p=>({x:p.x/adjustScale,y:p.y/adjustScale}));
+  const[tl,tr,br,bl]=orderCorners(rawPts);
+  const outW=Math.round(Math.max(dist(tl,tr),dist(bl,br)));
+  const outH=Math.round(Math.max(dist(tl,bl),dist(tr,br)));
+  let srcMat,dstMat,srcPts,dstPts,M;
+  try{
+    srcMat=cv.imread(drawImgToOffscreen(srcImage,srcImage.width,srcImage.height));
+    srcPts=cv.matFromArray(4,1,cv.CV_32FC2,[tl.x,tl.y,tr.x,tr.y,br.x,br.y,bl.x,bl.y]);
+    dstPts=cv.matFromArray(4,1,cv.CV_32FC2,[0,0,outW,0,outW,outH,0,outH]);
+    M=cv.getPerspectiveTransform(srcPts,dstPts);
+    dstMat=new cv.Mat();
+    cv.warpPerspective(srcMat,dstMat,M,new cv.Size(outW,outH),cv.INTER_LINEAR,cv.BORDER_CONSTANT,new cv.Scalar());
+    const rc=document.getElementById('canvas-result');
+    rc.width=outW; rc.height=outH; cv.imshow(rc,dstMat);
     goResult();
-  } catch(e) {
-    toast('補正に失敗しました: ' + e.message);
-  } finally {
-    if (srcMat) srcMat.delete(); if (dstMat) dstMat.delete();
-    if (srcPts) srcPts.delete(); if (dstPts) dstPts.delete();
-    if (M) M.delete();
+  }catch(e){toast('補正に失敗しました: '+e.message);}
+  finally{
+    if(srcMat) srcMat.delete(); if(dstMat) dstMat.delete();
+    if(srcPts) srcPts.delete(); if(dstPts) dstPts.delete();
+    if(M) M.delete();
   }
 }
 
 // ── Metadata form ──
-const CATS_PERSONAL = ['外食', '食材', '消耗品', '交際費', '嗜好品'];
-const CATS_EXPENSE  = ['会議費', '接待交際費', '消耗品費', '広告宣伝費', '新聞図書費', '雑費', '通信費', '旅費交通費', 'その他'];
+const CATS_PERSONAL=['外食','食材','消耗品','交際費','嗜好品'];
+const CATS_EXPENSE=['会議費','接待交際費','消耗品費','広告宣伝費','新聞図書費','雑費','通信費','旅費交通費','その他'];
 
-function updateCategoryOptions() {
-  const isExp = document.getElementById('meta-expense').checked;
-  const sel   = document.getElementById('meta-category');
-  sel.innerHTML = (isExp ? CATS_EXPENSE : CATS_PERSONAL)
-    .map(c => `<option value="${c}">${c}</option>`).join('');
+function updateCategoryOptions(){
+  const isExp=document.getElementById('meta-expense').checked;
+  const sel=document.getElementById('meta-category');
+  sel.innerHTML=(isExp?CATS_EXPENSE:CATS_PERSONAL).map(c=>`<option value="${c}">${c}</option>`).join('');
 }
-function onExpenseChange() { updateCategoryOptions(); refreshFilename(); }
+function onExpenseChange(){updateCategoryOptions();refreshFilename();}
 
-function buildFilename() {
-  const raw = document.getElementById('meta-date').value || '';
-  const dt  = raw.slice(2,4) + raw.slice(5,7) + raw.slice(8,10);
-  const cat = document.getElementById('meta-category').value || '';
-  const pay = document.getElementById('meta-payment').value  || '';
-  const amt = document.getElementById('meta-amount').value.trim();
-  const exp = document.getElementById('meta-expense').checked;
-  const parts = [dt];
-  if (exp) parts.push('経費');
-  parts.push(cat);
-  parts.push(pay);
-  if (amt) parts.push(amt);
-  return parts.join('_') + '.jpg';
+function buildFilename(){
+  const raw=document.getElementById('meta-date').value||'';
+  const dt=raw.slice(2,4)+raw.slice(5,7)+raw.slice(8,10);
+  const cat=document.getElementById('meta-category').value||'';
+  const pay=document.getElementById('meta-payment').value||'';
+  const amt=document.getElementById('meta-amount').value.trim();
+  const exp=document.getElementById('meta-expense').checked;
+  const parts=[dt];
+  if(exp) parts.push('経費');
+  parts.push(cat); parts.push(pay);
+  if(amt) parts.push(amt);
+  return parts.join('_')+'.jpg';
 }
-
-function refreshFilename() {
-  document.getElementById('meta-filename').value = buildFilename();
+function refreshFilename(){
+  document.getElementById('meta-filename').value=buildFilename();
   validateSaveBtn();
 }
-function validateSaveBtn() {
-  document.getElementById('btn-save').disabled =
-    !document.getElementById('meta-filename').value.trim();
+function validateSaveBtn(){
+  document.getElementById('btn-save').disabled=!document.getElementById('meta-filename').value.trim();
 }
-
-function initResultForm() {
-  const t = new Date();
-  document.getElementById('meta-date').value     = t.toLocaleDateString('sv');
-  document.getElementById('meta-amount').value   = '';
-  document.getElementById('meta-expense').checked = false;
-  document.getElementById('meta-payment').value  = 'PayPay';
+function initResultForm(){
+  const t=new Date();
+  document.getElementById('meta-date').value=t.toLocaleDateString('sv');
+  document.getElementById('meta-amount').value='';
+  document.getElementById('meta-expense').checked=false;
+  document.getElementById('meta-payment').value='PayPay';
   updateCategoryOptions();
   refreshFilename();
   updateSaveHint();
 }
 
 // ── Save ──
-async function saveImage() {
-  const filename = document.getElementById('meta-filename').value.trim() || buildFilename();
-  const canvas   = document.getElementById('canvas-result');
-  const dataURL  = canvas.toDataURL('image/jpeg', 0.92);
-  const bin = atob(dataURL.split(',')[1]);
-  const ab  = new ArrayBuffer(bin.length);
-  const ia  = new Uint8Array(ab);
-  for (let i = 0; i < bin.length; i++) ia[i] = bin.charCodeAt(i);
-  const blob = new Blob([ab], { type: 'image/jpeg' });
+async function saveImage(){
+  const filename=document.getElementById('meta-filename').value.trim()||buildFilename();
+  const canvas=document.getElementById('canvas-result');
+  const dataURL=canvas.toDataURL('image/jpeg',0.92);
+  const bin=atob(dataURL.split(',')[1]);
+  const ab=new ArrayBuffer(bin.length);
+  const ia=new Uint8Array(ab);
+  for(let i=0;i<bin.length;i++) ia[i]=bin.charCodeAt(i);
+  const blob=new Blob([ab],{type:'image/jpeg'});
 
-  // Try Dropbox if connected
-  if (isDropboxConnected()) {
-    const btn = document.getElementById('btn-save');
-    btn.disabled = true;
-    btn.textContent = '⏳ アップロード中...';
-    try {
-      await uploadToDropbox(blob, filename);
+  if(isDropboxConnected()){
+    const btn=document.getElementById('btn-save');
+    btn.disabled=true; btn.textContent='⏳ アップロード中...';
+    try{
+      await uploadToDropbox(blob,filename);
       toast('✅ Dropboxに保存しました！');
-    } catch(e) {
-      toast('❌ ' + e.message);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = '💾 Dropboxに保存';
-    }
+    }catch(e){toast('❌ '+e.message);}
+    finally{btn.disabled=false; btn.textContent='💾 Dropboxに保存';}
     return;
   }
 
-  // Fallback: Share Sheet or download
-  const file = new File([blob], filename, { type: 'image/jpeg' });
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    navigator.share({ files: [file] })
-      .then(() => toast('保存しました'))
-      .catch(e => { if (e.name !== 'AbortError') fallbackDownload(blob, filename); });
-  } else {
-    fallbackDownload(blob, filename);
+  const file=new File([blob],filename,{type:'image/jpeg'});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){
+    navigator.share({files:[file]})
+      .then(()=>toast('保存しました'))
+      .catch(e=>{if(e.name!=='AbortError') fallbackDownload(blob,filename);});
+  }else{
+    fallbackDownload(blob,filename);
   }
 }
-
-function fallbackDownload(blob, filename) {
-  const url = URL.createObjectURL(blob);
-  const a   = document.createElement('a');
-  a.href = url; a.download = filename;
+function fallbackDownload(blob,filename){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=filename;
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 10000);
+  setTimeout(()=>URL.revokeObjectURL(url),10000);
   toast('保存しました');
 }
 
 // ── Toast ──
-function toast(msg, duration = 2500) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
+function toast(msg,duration=2500){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
   clearTimeout(toast._t);
-  toast._t = setTimeout(() => el.classList.remove('show'), duration);
+  toast._t=setTimeout(()=>el.classList.remove('show'),duration);
 }
 
 // ══════════════════════════════════════
@@ -878,249 +821,279 @@ const DBX_REDIRECT   = 'https://pichikyo.github.io/receipt-scanner/';
 const DBX_AUTH_URL   = 'https://www.dropbox.com/oauth2/authorize';
 const DBX_TOKEN_URL  = 'https://api.dropboxapi.com/oauth2/token';
 const DBX_UPLOAD_URL = 'https://content.dropboxapi.com/2/files/upload';
+const DBX_LIST_URL   = 'https://api.dropboxapi.com/2/files/list_folder';
+const DBX_LIST_CONT  = 'https://api.dropboxapi.com/2/files/list_folder/continue';
 
 const LS_ACCESS  = 'dbx_access_token';
 const LS_REFRESH = 'dbx_refresh_token';
 const LS_EXPIRY  = 'dbx_expires_at';
-const LS_FOLDER  = 'dbx_folder';
+const LS_FOLDER  = 'dbx_folder';  // stored as '' (root) or '/path/to/folder'
 
-// PKCE helpers
-function b64urlEncode(buf) {
+function b64urlEncode(buf){
   return btoa(String.fromCharCode(...new Uint8Array(buf)))
-    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+    .replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');
 }
-async function sha256buf(str) {
-  const enc = new TextEncoder().encode(str);
-  return crypto.subtle.digest('SHA-256', enc);
+async function sha256buf(str){
+  const enc=new TextEncoder().encode(str);
+  return crypto.subtle.digest('SHA-256',enc);
 }
 
-async function connectDropbox() {
-  // Save folder path before navigating away
-  const folderInput = document.getElementById('dbx-folder');
-  const folder = folderInput.value.trim() || '/receipts';
-  localStorage.setItem(LS_FOLDER, folder);
-
-  // Generate PKCE verifier (43–128 chars, base64url safe)
-  const verifier = b64urlEncode(crypto.getRandomValues(new Uint8Array(32)));
-  localStorage.setItem('dbx_verifier', verifier);
-
-  // Generate challenge = BASE64URL(SHA256(verifier))
-  const challenge = b64urlEncode(await sha256buf(verifier));
-
-  // CSRF state
-  const state = b64urlEncode(crypto.getRandomValues(new Uint8Array(16)));
-  localStorage.setItem('dbx_state', state);
-
-  const params = new URLSearchParams({
-    client_id:             DBX_APP_KEY,
-    response_type:         'code',
-    redirect_uri:          DBX_REDIRECT,
-    code_challenge:        challenge,
-    code_challenge_method: 'S256',
-    token_access_type:     'offline',
-    state,
+async function connectDropbox(){
+  const verifier=b64urlEncode(crypto.getRandomValues(new Uint8Array(32)));
+  localStorage.setItem('dbx_verifier',verifier);
+  const challenge=b64urlEncode(await sha256buf(verifier));
+  const state=b64urlEncode(crypto.getRandomValues(new Uint8Array(16)));
+  localStorage.setItem('dbx_state',state);
+  const params=new URLSearchParams({
+    client_id:DBX_APP_KEY, response_type:'code',
+    redirect_uri:DBX_REDIRECT, code_challenge:challenge,
+    code_challenge_method:'S256', token_access_type:'offline', state,
   });
-
-  window.location.href = DBX_AUTH_URL + '?' + params.toString();
+  window.location.href=DBX_AUTH_URL+'?'+params.toString();
 }
 
-async function handleOAuthCallback() {
-  const params = new URLSearchParams(window.location.search);
-  const code  = params.get('code');
-  const state = params.get('state');
-  if (!code) return;
-
-  // Clean URL immediately
-  window.history.replaceState({}, document.title, DBX_REDIRECT);
-
-  // Verify state
-  const savedState = localStorage.getItem('dbx_state');
-  if (state !== savedState) {
-    toast('認証エラー: state不一致');
-    return;
-  }
-
-  const verifier = localStorage.getItem('dbx_verifier');
-  if (!verifier) {
-    toast('認証エラー: verifier不明');
-    return;
-  }
-
-  const body = new URLSearchParams({
-    code,
-    grant_type:    'authorization_code',
-    client_id:     DBX_APP_KEY,
-    redirect_uri:  DBX_REDIRECT,
-    code_verifier: verifier,
+async function handleOAuthCallback(){
+  const params=new URLSearchParams(window.location.search);
+  const code=params.get('code'), state=params.get('state');
+  if(!code) return;
+  window.history.replaceState({},document.title,DBX_REDIRECT);
+  if(state!==localStorage.getItem('dbx_state')){toast('認証エラー: state不一致');return;}
+  const verifier=localStorage.getItem('dbx_verifier');
+  if(!verifier){toast('認証エラー: verifier不明');return;}
+  const body=new URLSearchParams({
+    code, grant_type:'authorization_code',
+    client_id:DBX_APP_KEY, redirect_uri:DBX_REDIRECT, code_verifier:verifier,
   });
-
-  try {
-    const res  = await fetch(DBX_TOKEN_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  try{
+    const res=await fetch(DBX_TOKEN_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
       body,
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error_description || data.error || 'token error');
-
-    localStorage.setItem(LS_ACCESS, data.access_token);
-    if (data.refresh_token) localStorage.setItem(LS_REFRESH, data.refresh_token);
-    if (data.expires_in)    localStorage.setItem(LS_EXPIRY, String(Date.now() + data.expires_in * 1000));
-
+    const data=await res.json();
+    if(!res.ok) throw new Error(data.error_description||data.error||'token error');
+    localStorage.setItem(LS_ACCESS,data.access_token);
+    if(data.refresh_token) localStorage.setItem(LS_REFRESH,data.refresh_token);
+    if(data.expires_in)    localStorage.setItem(LS_EXPIRY,String(Date.now()+data.expires_in*1000));
     localStorage.removeItem('dbx_verifier');
     localStorage.removeItem('dbx_state');
-
-    toast('✅ Dropboxに接続しました！');
-  } catch(e) {
-    toast('Dropbox認証エラー: ' + e.message);
-  }
-
+    toast('✅ Dropboxに接続しました！フォルダを選んでください');
+  }catch(e){toast('Dropbox認証エラー: '+e.message);}
   updateDropboxUI();
+  // Open folder browser automatically after first connect
+  if(isDropboxConnected()&&!localStorage.getItem(LS_FOLDER)){
+    openSettings();
+    setTimeout(()=>openFolderBrowser(),400);
+  }
 }
 
-async function getValidAccessToken() {
-  const access  = localStorage.getItem(LS_ACCESS);
-  const expiry  = parseInt(localStorage.getItem(LS_EXPIRY) || '0', 10);
-  const refresh = localStorage.getItem(LS_REFRESH);
-  if (!access) return null;
-
-  // Refresh 5 min before expiry
-  if (refresh && expiry && Date.now() > expiry - 5 * 60 * 1000) {
-    const body = new URLSearchParams({
-      grant_type:    'refresh_token',
-      refresh_token: refresh,
-      client_id:     DBX_APP_KEY,
+async function getValidAccessToken(){
+  const access=localStorage.getItem(LS_ACCESS);
+  const expiry=parseInt(localStorage.getItem(LS_EXPIRY)||'0',10);
+  const refresh=localStorage.getItem(LS_REFRESH);
+  if(!access) return null;
+  if(refresh&&expiry&&Date.now()>expiry-5*60*1000){
+    const body=new URLSearchParams({
+      grant_type:'refresh_token',refresh_token:refresh,client_id:DBX_APP_KEY,
     });
-    try {
-      const res  = await fetch(DBX_TOKEN_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body,
+    try{
+      const res=await fetch(DBX_TOKEN_URL,{
+        method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body,
       });
-      const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem(LS_ACCESS, data.access_token);
-        if (data.expires_in) localStorage.setItem(LS_EXPIRY, String(Date.now() + data.expires_in * 1000));
+      const data=await res.json();
+      if(res.ok){
+        localStorage.setItem(LS_ACCESS,data.access_token);
+        if(data.expires_in) localStorage.setItem(LS_EXPIRY,String(Date.now()+data.expires_in*1000));
         return data.access_token;
       }
-    } catch(e) { /* fall through */ }
-    // Refresh failed — clear tokens
-    clearDropboxTokens();
-    updateDropboxUI();
-    return null;
+    }catch(e){}
+    clearDropboxTokens(); updateDropboxUI(); return null;
   }
-
   return access;
 }
 
-function isDropboxConnected() {
-  return !!localStorage.getItem(LS_ACCESS);
+function isDropboxConnected(){ return !!localStorage.getItem(LS_ACCESS); }
+function clearDropboxTokens(){
+  [LS_ACCESS,LS_REFRESH,LS_EXPIRY].forEach(k=>localStorage.removeItem(k));
+}
+function disconnectDropbox(){
+  clearDropboxTokens(); updateDropboxUI(); toast('Dropboxから切断しました');
 }
 
-function clearDropboxTokens() {
-  localStorage.removeItem(LS_ACCESS);
-  localStorage.removeItem(LS_REFRESH);
-  localStorage.removeItem(LS_EXPIRY);
+function folderDisplayName(path){
+  if(path===''||path==='/') return '/ (ルート)';
+  return path;
 }
 
-function disconnectDropbox() {
-  clearDropboxTokens();
-  updateDropboxUI();
-  toast('Dropboxから切断しました');
-}
+function updateDropboxUI(){
+  const connected=isDropboxConnected();
+  const statusEl=document.getElementById('dbx-status');
+  const connectBtn=document.getElementById('dbx-connect-btn');
+  const disconnBtn=document.getElementById('dbx-disconnect-btn');
+  const dot=document.getElementById('dbx-header-dot');
+  const folderDisp=document.getElementById('dbx-folder-display');
+  const folderRow=document.getElementById('dbx-folder-row');
 
-function updateDropboxUI() {
-  const connected  = isDropboxConnected();
-  const statusEl   = document.getElementById('dbx-status');
-  const connectBtn = document.getElementById('dbx-connect-btn');
-  const disconnBtn = document.getElementById('dbx-disconnect-btn');
-  const dot        = document.getElementById('dbx-header-dot');
-
-  if (statusEl) {
-    if (connected) {
-      statusEl.textContent  = '✅ 接続済み';
-      statusEl.style.color  = 'var(--green)';
-    } else {
-      statusEl.textContent  = '未接続';
-      statusEl.style.color  = 'var(--text3)';
-    }
+  if(statusEl){
+    statusEl.textContent=connected?'✅ 接続済み':'未接続';
+    statusEl.style.color=connected?'var(--green)':'var(--text3)';
   }
-  if (connectBtn) connectBtn.style.display = connected ? 'none' : '';
-  if (disconnBtn) disconnBtn.style.display = connected ? ''     : 'none';
-  if (dot)        dot.classList.toggle('visible', connected);
-
+  if(connectBtn) connectBtn.style.display=connected?'none':'';
+  if(disconnBtn) disconnBtn.style.display=connected?'':'none';
+  if(dot) dot.classList.toggle('visible',connected);
+  if(folderRow) folderRow.style.opacity=connected?'1':'0.4';
+  if(folderDisp){
+    const stored=localStorage.getItem(LS_FOLDER);
+    folderDisp.textContent=stored!==null?folderDisplayName(stored):'未設定';
+  }
   updateSaveHint();
   updateSaveBtn();
 }
 
-function updateSaveHint() {
-  const hint = document.getElementById('save-hint');
-  if (!hint) return;
-  if (isDropboxConnected()) {
-    const folder = localStorage.getItem(LS_FOLDER) || '/receipts';
-    hint.textContent = `Dropbox「${folder}」に保存します`;
-  } else {
-    hint.textContent = typeof navigator.share === 'function'
-      ? '共有シートの「Dropboxに保存」を選択してください'
-      : '「保存」をタップするとファイルがダウンロードされます';
+function updateSaveHint(){
+  const hint=document.getElementById('save-hint');
+  if(!hint) return;
+  if(isDropboxConnected()){
+    const stored=localStorage.getItem(LS_FOLDER);
+    hint.textContent='Dropbox「'+(stored!==null?folderDisplayName(stored):'未設定')+'」に保存します';
+  }else{
+    hint.textContent=typeof navigator.share==='function'
+      ?'共有シートの「Dropboxに保存」を選択してください'
+      :'「保存」をタップするとファイルがダウンロードされます';
   }
 }
-
-function updateSaveBtn() {
-  const btn = document.getElementById('btn-save');
-  if (!btn) return;
-  btn.textContent = isDropboxConnected() ? '💾 Dropboxに保存' : '💾 保存';
+function updateSaveBtn(){
+  const btn=document.getElementById('btn-save');
+  if(!btn) return;
+  btn.textContent=isDropboxConnected()?'💾 Dropboxに保存':'💾 保存';
 }
 
-async function uploadToDropbox(blob, filename) {
-  const token = await getValidAccessToken();
-  if (!token) throw new Error('再接続してください');
-
-  const folder = (localStorage.getItem(LS_FOLDER) || '/receipts').replace(/\/+$/, '');
-  const path   = folder + '/' + filename;
-
-  const res = await fetch(DBX_UPLOAD_URL, {
-    method: 'POST',
-    headers: {
-      'Authorization':   'Bearer ' + token,
-      'Content-Type':    'application/octet-stream',
-      'Dropbox-API-Arg': JSON.stringify({ path, mode: 'add', autorename: true, mute: false }),
+async function uploadToDropbox(blob,filename){
+  const token=await getValidAccessToken();
+  if(!token) throw new Error('再接続してください');
+  const stored=localStorage.getItem(LS_FOLDER)||'';
+  // Build Dropbox path: '' → '/file.jpg',  '/folder' → '/folder/file.jpg'
+  const base=(stored===''||stored==='/')?'':stored.replace(/\/+$/,'');
+  const path=base+'/'+filename;
+  const res=await fetch(DBX_UPLOAD_URL,{
+    method:'POST',
+    headers:{
+      'Authorization':'Bearer '+token,
+      'Content-Type':'application/octet-stream',
+      'Dropbox-API-Arg':JSON.stringify({path,mode:'add',autorename:true,mute:false}),
     },
-    body: blob,
+    body:blob,
   });
-
-  if (!res.ok) {
-    let msg = 'アップロード失敗';
-    try { const e = await res.json(); msg = e.error_summary || msg; } catch(_) {}
+  if(!res.ok){
+    let msg='アップロード失敗';
+    try{const e=await res.json();msg=e.error_summary||msg;}catch(_){}
     throw new Error(msg);
   }
   return res.json();
 }
 
 // ── Settings modal ──
-function openSettings() {
-  // Pre-fill folder from storage
-  const saved = localStorage.getItem(LS_FOLDER) || '/receipts';
-  document.getElementById('dbx-folder').value = saved;
+function openSettings(){
   updateDropboxUI();
   document.getElementById('modal-settings').classList.add('open');
 }
-
-function closeSettings() {
-  // Save folder path on close
-  const folder = document.getElementById('dbx-folder').value.trim() || '/receipts';
-  localStorage.setItem(LS_FOLDER, folder);
+function closeSettings(){
   document.getElementById('modal-settings').classList.remove('open');
-  updateSaveHint();
+}
+function onSettingsOverlayClick(e){
+  if(e.target===document.getElementById('modal-settings')) closeSettings();
 }
 
-function onModalOverlayClick(e) {
-  if (e.target === document.getElementById('modal-settings')) closeSettings();
+// ── Folder browser ──
+let fbCurrentPath='';   // '' = Dropbox root (or App folder root)
+let fbPathStack=[];     // navigation history
+
+async function openFolderBrowser(){
+  if(!isDropboxConnected()){toast('先にDropboxに接続してください');return;}
+  fbCurrentPath='';
+  fbPathStack=[];
+  document.getElementById('modal-folder').classList.add('open');
+  await loadFolderContents('');
+}
+
+function closeFolderBrowser(){
+  document.getElementById('modal-folder').classList.remove('open');
+}
+
+async function folderBrowserBack(){
+  if(fbPathStack.length===0){ closeFolderBrowser(); return; }
+  fbCurrentPath=fbPathStack.pop();
+  await loadFolderContents(fbCurrentPath);
+}
+
+async function navigateInto(path){
+  fbPathStack.push(fbCurrentPath);
+  fbCurrentPath=path;
+  await loadFolderContents(path);
+}
+
+function confirmFolder(){
+  localStorage.setItem(LS_FOLDER,fbCurrentPath);
+  closeFolderBrowser();
+  updateDropboxUI();
+  toast('フォルダを設定しました');
+}
+
+async function loadFolderContents(path){
+  const listEl=document.getElementById('folder-list');
+  const pathEl=document.getElementById('folder-browser-path');
+  listEl.innerHTML='<div class="folder-msg">読み込み中...</div>';
+  pathEl.textContent=folderDisplayName(path);
+
+  const token=await getValidAccessToken();
+  if(!token){ listEl.innerHTML='<div class="folder-msg">接続エラー</div>'; return; }
+
+  try{
+    let entries=[];
+    let res=await fetch(DBX_LIST_URL,{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify({path,include_non_downloadable_files:false}),
+    });
+    let data=await res.json();
+    if(!res.ok) throw new Error(data.error_summary||'リスト取得エラー');
+    entries.push(...data.entries.filter(e=>e['.tag']==='folder'));
+    while(data.has_more){
+      res=await fetch(DBX_LIST_CONT,{
+        method:'POST',
+        headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+        body:JSON.stringify({cursor:data.cursor}),
+      });
+      data=await res.json();
+      if(!res.ok) break;
+      entries.push(...data.entries.filter(e=>e['.tag']==='folder'));
+    }
+    entries.sort((a,b)=>a.name.localeCompare(b.name,'ja'));
+    renderFolderList(entries);
+  }catch(e){
+    listEl.innerHTML=`<div class="folder-msg">❌ ${e.message}</div>`;
+  }
+}
+
+function renderFolderList(folders){
+  const listEl=document.getElementById('folder-list');
+  if(folders.length===0){
+    listEl.innerHTML='<div class="folder-msg">サブフォルダがありません</div>';
+    return;
+  }
+  listEl.innerHTML=folders.map(f=>{
+    const safePath=f.path_display.replace(/'/g,"\\'");
+    return `<div class="folder-item" onclick="navigateInto('${safePath}')">
+      <span class="folder-item-icon">📁</span>
+      <span class="folder-item-name">${f.name}</span>
+      <span class="folder-item-chevron">›</span>
+    </div>`;
+  }).join('');
 }
 
 // ── Init ──
-handleOAuthCallback();   // process ?code= if present
-updateDropboxUI();       // refresh UI from stored tokens
+handleOAuthCallback();
+updateDropboxUI();
 </script>
 </body>
 </html>
