@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="レシートスキャン">
-<title>レシートスキャナー</title>
+<meta name="apple-mobile-web-app-title" content="ぴちきょレシートスキャナ">
+<title>ぴちきょレシートスキャナ</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -295,7 +295,7 @@
   <div id="screen-capture" class="screen active">
     <div class="header">
       <span style="min-width:44px"></span>
-      <h1>レシートスキャナー</h1>
+      <h1>ぴちきょレシートスキャナ</h1>
       <span style="min-width:44px"></span>
     </div>
     <div class="capture-body">
@@ -319,7 +319,7 @@
     </div>
     <div class="adjust-footer">
       <button class="btn-secondary" onclick="goCapture()">やり直し</button>
-      <button class="btn-primary" onclick="applyPerspective()">補正する →</button>
+      <button class="btn-primary" onclick="applyPerspective()">OK</button>
     </div>
   </div>
 
@@ -327,7 +327,7 @@
   <div id="screen-result" class="screen">
     <div class="header">
       <button class="header-btn" onclick="goAdjust()">戻る</button>
-      <h1>補正結果</h1>
+      <h1>レシートチェック</h1>
       <span style="min-width:44px"></span>
     </div>
     <div class="result-canvas-wrap">
@@ -337,7 +337,7 @@
       <div class="meta-form">
         <div class="meta-row">
           <span class="meta-label">日付</span>
-          <input type="date" id="meta-date" class="meta-input" oninput="refreshFilename()">
+          <input type="date" id="meta-date" class="meta-input" oninput="refreshFilename()" onchange="refreshFilename()">
         </div>
         <div class="meta-row">
           <span class="meta-label">経費</span>
