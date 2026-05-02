@@ -210,7 +210,7 @@
   }
   .result-footer {
     background: var(--bg);
-    padding: 12px 16px 16px;
+    padding: 12px 16px calc(16px + var(--safe-bottom));
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -233,6 +233,63 @@
     text-align: center;
     line-height: 1.5;
   }
+  /* メタデータフォーム */
+  .meta-form {
+    background: var(--bg2);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .meta-row {
+    display: flex;
+    align-items: center;
+    padding: 11px 14px;
+    gap: 10px;
+    border-bottom: 0.5px solid var(--sep);
+  }
+  .meta-row:last-child { border-bottom: none; }
+  .meta-label {
+    font-size: 15px;
+    color: var(--text);
+    min-width: 60px;
+    flex-shrink: 0;
+  }
+  .meta-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    color: var(--text);
+    text-align: right;
+    font-family: inherit;
+    min-width: 0;
+  }
+  .meta-input::placeholder { color: var(--text3); }
+  .meta-input[type="date"] { color-scheme: dark; }
+  /* iOSスタイルトグル */
+  .toggle-wrap { display: flex; align-items: center; margin-left: auto; }
+  .toggle-input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .toggle-track {
+    width: 51px; height: 31px;
+    background: var(--bg3);
+    border-radius: 16px;
+    position: relative;
+    transition: background 0.2s;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .toggle-track::after {
+    content: '';
+    position: absolute;
+    width: 27px; height: 27px;
+    background: #fff;
+    border-radius: 50%;
+    top: 2px; left: 2px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  }
+  .toggle-input:checked + .toggle-track { background: #34C759; }
+  .toggle-input:checked + .toggle-track::after { transform: translateX(20px); }
 
   /* ── Loading overlay ── */
   #cv-overlay {
@@ -333,11 +390,27 @@
       <canvas id="canvas-result"></canvas>
     </div>
     <div class="result-footer">
-      <div class="result-btns">
-        <button id="btn-share" class="btn-primary" onclick="shareImage()">📤 共有</button>
-        <button id="btn-download" class="btn-secondary" onclick="downloadImage()">📥 保存</button>
+      <div class="meta-form">
+        <div class="meta-row">
+          <span class="meta-label">日付</span>
+          <input type="date" id="meta-date" class="meta-input">
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">店舗名</span>
+          <input type="text" id="meta-store" class="meta-input" placeholder="例：ドトール渋谷店" oninput="validateSaveBtn()">
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">経費</span>
+          <label class="toggle-wrap">
+            <input type="checkbox" id="meta-expense" class="toggle-input">
+            <span class="toggle-track"></span>
+          </label>
+        </div>
       </div>
-      <div class="hint" id="save-hint">共有シートから「画像を保存」を選ぶとカメラロールに保存されます</div>
+      <div class="result-btns">
+        <button id="btn-save" class="btn-primary" onclick="saveImage()" disabled>💾 保存</button>
+      </div>
+      <div class="hint" id="save-hint"></div>
     </div>
   </div>
 
@@ -408,7 +481,7 @@ function showScreen(id) {
 }
 function goCapture() { showScreen('screen-capture'); }
 function goAdjust()  { showScreen('screen-adjust'); }
-function goResult()  { showScreen('screen-result'); }
+function goResult()  { showScreen('screen-result'); initResultForm(); }
 
 // ── File inputs ──
 document.getElementById('input-camera').addEventListener('change', onFileSelected);
@@ -691,10 +764,34 @@ function applyPerspective() {
 
 function updateShareHint() {
   const shareAvail = !!(navigator.canShare);
-  document.getElementById('btn-share').style.display = shareAvail ? '' : 'none';
   document.getElementById('save-hint').textContent = shareAvail
-    ? '共有シートから「画像を保存」を選ぶとカメラロールに保存されます'
-    : '「保存」をタップするとファイルに保存されます';
+    ? '共有シートの「ファイルに保存」でDropboxフォルダを選択できます'
+    : '「保存」をタップするとファイルがダウンロードされます';
+}
+
+function buildFilename() {
+  const raw   = document.getElementById('meta-date').value;   // YYYY-MM-DD
+  const date  = raw.replace(/-/g, '');                        // YYYYMMDD
+  const store = document.getElementById('meta-store').value.trim();
+  const exp   = document.getElementById('meta-expense').checked;
+  return exp ? `${date}_経費_${store}.jpg` : `${date}_${store}.jpg`;
+}
+
+function validateSaveBtn() {
+  const store = document.getElementById('meta-store').value.trim();
+  document.getElementById('btn-save').disabled = store.length === 0;
+}
+
+function initResultForm() {
+  const t = new Date();
+  const y = t.getFullYear();
+  const m = String(t.getMonth() + 1).padStart(2, '0');
+  const d = String(t.getDate()).padStart(2, '0');
+  document.getElementById('meta-date').value    = `${y}-${m}-${d}`;
+  document.getElementById('meta-store').value   = '';
+  document.getElementById('meta-expense').checked = false;
+  validateSaveBtn();
+  updateShareHint();
 }
 
 // ── Save / Share ──
@@ -704,29 +801,25 @@ function getResultBlob() {
   });
 }
 
-async function shareImage() {
+async function saveImage() {
+  const filename = buildFilename();
   try {
     const blob = await getResultBlob();
-    const file = new File([blob], 'receipt.jpg', { type: 'image/jpeg' });
+    const file = new File([blob], filename, { type: 'image/jpeg' });
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({ files: [file], title: 'レシート' });
+      await navigator.share({ files: [file], title: filename });
     } else {
-      downloadImage();
+      const url = URL.createObjectURL(blob);
+      const a   = document.createElement('a');
+      a.href     = url;
+      a.download = filename;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      toast('保存しました');
     }
   } catch(e) {
-    if (e.name !== 'AbortError') toast('共有できませんでした');
+    if (e.name !== 'AbortError') toast('保存できませんでした');
   }
-}
-
-async function downloadImage() {
-  const blob = await getResultBlob();
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = 'receipt_' + Date.now() + '.jpg';
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 10000);
-  toast('保存しました');
 }
 
 // ── Toast ──
