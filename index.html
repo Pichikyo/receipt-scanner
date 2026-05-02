@@ -253,7 +253,7 @@
     min-width: 60px;
     flex-shrink: 0;
   }
-  .meta-input {
+  .meta-input, .meta-select {
     flex: 1;
     background: transparent;
     border: none;
@@ -266,6 +266,20 @@
   }
   .meta-input::placeholder { color: var(--text3); }
   .meta-input[type="date"] { color-scheme: dark; }
+  .meta-input[type="number"] { -moz-appearance: textfield; }
+  .meta-input[type="number"]::-webkit-outer-spin-button,
+  .meta-input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .meta-select {
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 16px;
+  }
+  .meta-label { min-width: 90px; }
+  .meta-filename { font-size: 12px; color: var(--text2); }
   /* iOSスタイルトグル */
   .toggle-wrap { display: flex; align-items: center; margin-left: auto; }
   .toggle-input { position: absolute; opacity: 0; width: 0; height: 0; }
@@ -396,16 +410,17 @@
           <input type="date" id="meta-date" class="meta-input" oninput="refreshFilename()">
         </div>
         <div class="meta-row">
-          <span class="meta-label">店舗名</span>
-          <input type="text" id="meta-store" class="meta-input" placeholder="例：モスバーガー市ヶ谷店" oninput="refreshFilename()">
-        </div>
-        <div class="meta-row">
           <span class="meta-label">内容</span>
-          <input type="text" id="meta-category" class="meta-input" placeholder="例：外食" oninput="refreshFilename()">
+          <select id="meta-category" class="meta-select" onchange="refreshFilename()"></select>
         </div>
         <div class="meta-row">
           <span class="meta-label">支払い</span>
-          <input type="text" id="meta-payment" class="meta-input" placeholder="例：PayPay" oninput="refreshFilename()">
+          <select id="meta-payment" class="meta-select" onchange="refreshFilename()">
+            <option value="PayPay">PayPay</option>
+            <option value="クレジットカード">クレジットカード</option>
+            <option value="交通系IC">交通系IC</option>
+            <option value="現金">現金</option>
+          </select>
         </div>
         <div class="meta-row">
           <span class="meta-label">金額（税込）</span>
@@ -414,13 +429,13 @@
         <div class="meta-row">
           <span class="meta-label">経費</span>
           <label class="toggle-wrap">
-            <input type="checkbox" id="meta-expense" class="toggle-input" onchange="refreshFilename()">
+            <input type="checkbox" id="meta-expense" class="toggle-input" onchange="onExpenseChange()">
             <span class="toggle-track"></span>
           </label>
         </div>
         <div class="meta-row">
           <span class="meta-label">ファイル名</span>
-          <input type="text" id="meta-filename" class="meta-input" style="font-size:12px;color:var(--text2)" oninput="validateSaveBtn()">
+          <input type="text" id="meta-filename" class="meta-input meta-filename" oninput="validateSaveBtn()">
         </div>
       </div>
       <div class="result-btns">
@@ -778,29 +793,39 @@ function applyPerspective() {
   }
 }
 
-let _cachedBlob = null;
+// ── カテゴリ定義 ──
+const CATS_PERSONAL = ['外食', '食材', '消耗品', '交際費', '嗜好品'];
+const CATS_EXPENSE  = ['会議費', '接待交際費', '消耗品費', '広告宣伝費', '新聞図書費', '雑費', '通信費', '旅費交通費', 'その他'];
 
-function updateShareHint() {
-  const shareAvail = !!(navigator.canShare);
-  document.getElementById('save-hint').textContent = shareAvail
-    ? '共有シートの「ファイルに保存」でDropboxフォルダを選択できます'
-    : '「保存」をタップするとファイルがダウンロードされます';
+function updateCategoryOptions() {
+  const isExp = document.getElementById('meta-expense').checked;
+  const cats  = isExp ? CATS_EXPENSE : CATS_PERSONAL;
+  const sel   = document.getElementById('meta-category');
+  sel.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
+}
+
+function onExpenseChange() {
+  updateCategoryOptions();
+  refreshFilename();
 }
 
 function buildFilename() {
-  const date  = (document.getElementById('meta-date').value || '').replace(/-/g, '');
-  const store = document.getElementById('meta-store').value.trim();
-  const cat   = document.getElementById('meta-category').value.trim();
-  const pay   = document.getElementById('meta-payment').value.trim();
-  const amt   = document.getElementById('meta-amount').value.trim();
-  const exp   = document.getElementById('meta-expense').checked;
+  const raw = document.getElementById('meta-date').value || '';
+  const yy  = raw.slice(2, 4);
+  const mm  = raw.slice(5, 7);
+  const dd  = raw.slice(8, 10);
+  const dt  = yy + mm + dd;                                        // YYMMDD
+  const cat = document.getElementById('meta-category').value || '';
+  const pay = document.getElementById('meta-payment').value  || '';
+  const amt = document.getElementById('meta-amount').value.trim();
+  const exp = document.getElementById('meta-expense').checked;
 
-  const parts = [date];
+  // 例: 260502_経費_外食_PayPay_1700.jpg
+  const parts = [dt];
   if (exp) parts.push('経費');
-  if (store) parts.push(store);
-  if (cat)   parts.push(cat);
-  if (pay)   parts.push(pay);
-  if (amt)   parts.push(amt + '円');
+  parts.push(cat);
+  parts.push(pay);
+  if (amt) parts.push(amt);
   return parts.join('_') + '.jpg';
 }
 
@@ -810,56 +835,66 @@ function refreshFilename() {
 }
 
 function validateSaveBtn() {
-  const store    = document.getElementById('meta-store').value.trim();
-  const filename = document.getElementById('meta-filename').value.trim();
-  document.getElementById('btn-save').disabled = store.length === 0 || filename.length === 0;
+  const fn = document.getElementById('meta-filename').value.trim();
+  document.getElementById('btn-save').disabled = !fn;
 }
+
+function updateShareHint() {
+  document.getElementById('save-hint').textContent =
+    typeof navigator.share === 'function'
+      ? '共有シートの「ファイルに保存」でDropboxフォルダを選択できます'
+      : '「保存」をタップするとファイルがダウンロードされます';
+}
+
+let _cachedBlob = null;
 
 function initResultForm() {
   const t = new Date();
-  const y = t.getFullYear();
-  const m = String(t.getMonth() + 1).padStart(2, '0');
-  const d = String(t.getDate()).padStart(2, '0');
-  document.getElementById('meta-date').value     = `${y}-${m}-${d}`;
-  document.getElementById('meta-store').value    = '';
-  document.getElementById('meta-category').value = '';
-  document.getElementById('meta-payment').value  = '';
-  document.getElementById('meta-amount').value   = '';
+  document.getElementById('meta-date').value    = t.toLocaleDateString('sv');  // YYYY-MM-DD
+  document.getElementById('meta-amount').value  = '';
   document.getElementById('meta-expense').checked = false;
+  document.getElementById('meta-payment').value = 'PayPay';
+  updateCategoryOptions();   // デフォルト: 外食
   refreshFilename();
   updateShareHint();
 
-  // iOSのShare API制約回避: 画面表示時にblobを事前生成
+  // 保存ボタン押下時にすぐ使えるようblobを事前生成
   _cachedBlob = null;
-  document.getElementById('canvas-result').toBlob(blob => {
-    _cachedBlob = blob;
-  }, 'image/jpeg', 0.92);
+  document.getElementById('canvas-result').toBlob(b => { _cachedBlob = b; }, 'image/jpeg', 0.92);
 }
 
-// ── Save / Share ──
+// ── 保存 ──
 function saveImage() {
   const filename = document.getElementById('meta-filename').value.trim() || buildFilename();
-  const blob = _cachedBlob;
-  if (!blob) { toast('画像の準備中です。もう一度タップしてください'); return; }
 
-  const file = new File([blob], filename, { type: 'image/jpeg' });
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    navigator.share({ files: [file], title: filename }).catch(e => {
-      if (e.name !== 'AbortError') fallbackDownload(blob, filename);
-    });
+  function doSave(blob) {
+    // iOSはnavigator.share({files})で共有シートを使う
+    if (typeof navigator.share === 'function') {
+      const f = new File([blob], filename, { type: 'image/jpeg' });
+      navigator.share({ files: [f] })
+        .then(() => toast('共有しました'))
+        .catch(e => { if (e.name !== 'AbortError') fallbackDownload(blob, filename); });
+    } else {
+      fallbackDownload(blob, filename);
+    }
+  }
+
+  if (_cachedBlob) {
+    doSave(_cachedBlob);
   } else {
-    fallbackDownload(blob, filename);
+    // blobがまだ無ければ再生成してから保存
+    document.getElementById('canvas-result').toBlob(b => {
+      _cachedBlob = b;
+      doSave(b);
+    }, 'image/jpeg', 0.92);
   }
 }
 
 function fallbackDownload(blob, filename) {
   const url = URL.createObjectURL(blob);
   const a   = document.createElement('a');
-  a.href     = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 10000);
   toast('保存しました');
 }
