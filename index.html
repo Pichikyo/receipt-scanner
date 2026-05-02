@@ -12,7 +12,6 @@
 
   :root {
     --blue: #0A84FF;
-    --blue-dark: #0060DF;
     --bg: #1C1C1E;
     --bg2: #2C2C2E;
     --bg3: #3A3A3C;
@@ -42,11 +41,7 @@
     padding-bottom: var(--safe-bottom);
   }
 
-  .screen {
-    display: none;
-    flex-direction: column;
-    height: 100%;
-  }
+  .screen { display: none; flex-direction: column; height: 100%; }
   .screen.active { display: flex; }
 
   /* ── Header ── */
@@ -60,11 +55,7 @@
     border-bottom: 0.5px solid var(--sep);
     flex-shrink: 0;
   }
-  .header h1 {
-    font-size: 17px;
-    font-weight: 600;
-    letter-spacing: -0.3px;
-  }
+  .header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
   .header-btn {
     background: none;
     border: none;
@@ -81,10 +72,8 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* ── Capture screen ── */
-  #screen-capture {
-    justify-content: flex-start;
-  }
+  /* ── Capture ── */
+  #screen-capture { justify-content: flex-start; }
   .capture-body {
     flex: 1;
     display: flex;
@@ -95,8 +84,7 @@
     padding: 32px 24px;
   }
   .capture-icon {
-    width: 96px;
-    height: 96px;
+    width: 96px; height: 96px;
     background: var(--bg3);
     border-radius: 24px;
     display: flex;
@@ -104,18 +92,9 @@
     justify-content: center;
     font-size: 48px;
   }
-  .capture-title {
-    font-size: 22px;
-    font-weight: 700;
-    text-align: center;
-    letter-spacing: -0.4px;
-  }
-  .capture-sub {
-    font-size: 15px;
-    color: var(--text3);
-    text-align: center;
-    line-height: 1.5;
-  }
+  .capture-title { font-size: 22px; font-weight: 700; text-align: center; letter-spacing: -0.4px; }
+  .capture-sub { font-size: 15px; color: var(--text3); text-align: center; line-height: 1.5; }
+
   .btn-primary {
     background: var(--blue);
     color: #fff;
@@ -159,10 +138,8 @@
   }
   .btn-secondary:active { opacity: 0.7; }
 
-  /* ── Adjust screen ── */
-  #screen-adjust {
-    background: #000;
-  }
+  /* ── Adjust ── */
+  #screen-adjust { background: #000; }
   .canvas-wrap {
     flex: 1;
     position: relative;
@@ -171,12 +148,7 @@
     align-items: center;
     justify-content: center;
   }
-  #canvas-adjust {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    touch-action: none;
-  }
+  #canvas-adjust { max-width: 100%; max-height: 100%; object-fit: contain; touch-action: none; }
   .adjust-footer {
     background: var(--bg);
     padding: 16px;
@@ -185,16 +157,10 @@
     border-top: 0.5px solid var(--sep);
   }
   .adjust-footer .btn-primary,
-  .adjust-footer .btn-secondary {
-    max-width: none;
-    flex: 1;
-    padding: 14px 8px;
-  }
+  .adjust-footer .btn-secondary { max-width: none; flex: 1; padding: 14px 8px; }
 
-  /* ── Result screen ── */
-  #screen-result {
-    background: #000;
-  }
+  /* ── Result ── */
+  #screen-result { background: #000; }
   .result-canvas-wrap {
     flex: 1;
     overflow: hidden;
@@ -203,11 +169,7 @@
     justify-content: center;
     background: #111;
   }
-  #canvas-result {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
+  #canvas-result { max-width: 100%; max-height: 100%; object-fit: contain; }
   .result-footer {
     background: var(--bg);
     padding: 12px 16px calc(16px + var(--safe-bottom));
@@ -216,29 +178,12 @@
     gap: 10px;
     border-top: 0.5px solid var(--sep);
   }
-  .result-btns {
-    display: flex;
-    gap: 12px;
-  }
-  .result-btns .btn-primary,
-  .result-btns .btn-secondary {
-    max-width: none;
-    flex: 1;
-    padding: 14px 8px;
-    font-size: 15px;
-  }
-  .hint {
-    font-size: 12px;
-    color: var(--text3);
-    text-align: center;
-    line-height: 1.5;
-  }
-  /* メタデータフォーム */
-  .meta-form {
-    background: var(--bg2);
-    border-radius: 12px;
-    overflow: hidden;
-  }
+  .result-btns { display: flex; gap: 12px; }
+  .result-btns .btn-primary { max-width: none; flex: 1; padding: 14px 8px; font-size: 15px; }
+  .hint { font-size: 12px; color: var(--text3); text-align: center; line-height: 1.5; }
+
+  /* ── Metadata form ── */
+  .meta-form { background: var(--bg2); border-radius: 12px; overflow: hidden; }
   .meta-row {
     display: flex;
     align-items: center;
@@ -247,12 +192,7 @@
     border-bottom: 0.5px solid var(--sep);
   }
   .meta-row:last-child { border-bottom: none; }
-  .meta-label {
-    font-size: 15px;
-    color: var(--text);
-    min-width: 60px;
-    flex-shrink: 0;
-  }
+  .meta-label { font-size: 15px; color: var(--text); min-width: 90px; flex-shrink: 0; }
   .meta-input, .meta-select {
     flex: 1;
     background: transparent;
@@ -266,9 +206,6 @@
   }
   .meta-input::placeholder { color: var(--text3); }
   .meta-input[type="date"] { color-scheme: dark; }
-  .meta-input[inputmode="numeric"] { -moz-appearance: textfield; }
-  .meta-input[inputmode="numeric"]::-webkit-outer-spin-button,
-  .meta-input[inputmode="numeric"]::-webkit-inner-spin-button { -webkit-appearance: none; }
   .meta-select {
     -webkit-appearance: none;
     appearance: none;
@@ -278,26 +215,9 @@
     background-position: left center;
     padding-left: 16px;
   }
-  .meta-label { min-width: 90px; }
   .meta-filename { font-size: 12px; color: var(--text2); }
-  .ocr-btn {
-    background: var(--bg3);
-    border: none;
-    border-radius: 8px;
-    color: var(--text2);
-    font-size: 12px;
-    font-family: inherit;
-    padding: 5px 10px;
-    min-height: 30px;
-    cursor: pointer;
-    flex-shrink: 0;
-    -webkit-tap-highlight-color: transparent;
-    transition: opacity 0.15s;
-  }
-  .ocr-btn:active { opacity: 0.7; }
-  .ocr-btn:disabled { opacity: 0.35; }
-  #ocr-progress { font-size: 11px; color: var(--text3); text-align: center; min-height: 14px; }
-  /* iOSスタイルトグル */
+
+  /* ── iOS toggle ── */
   .toggle-wrap { display: flex; align-items: center; margin-left: auto; }
   .toggle-input { position: absolute; opacity: 0; width: 0; height: 0; }
   .toggle-track {
@@ -337,77 +257,14 @@
   }
   #cv-overlay.hidden { display: none; }
   .spinner {
-    width: 44px;
-    height: 44px;
+    width: 44px; height: 44px;
     border: 3px solid var(--bg3);
     border-top-color: var(--blue);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .cv-loading-text {
-    font-size: 15px;
-    color: var(--text2);
-  }
-
-  /* ── Settings Modal ── */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.72);
-    display: flex;
-    align-items: flex-end;
-    z-index: 200;
-    backdrop-filter: blur(6px);
-  }
-  .modal-overlay.hidden { display: none; }
-  .modal-box {
-    background: var(--bg2);
-    border-radius: 20px 20px 0 0;
-    width: 100%;
-    padding-bottom: calc(var(--safe-bottom) + 8px);
-  }
-  .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 16px 12px;
-    border-bottom: 0.5px solid var(--sep);
-  }
-  .modal-title { font-size: 17px; font-weight: 600; }
-  .modal-body {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .modal-desc { font-size: 14px; color: var(--text2); line-height: 1.6; }
-  .modal-link { font-size: 14px; color: var(--blue); text-decoration: none; }
-  .modal-label { font-size: 13px; color: var(--text3); }
-  .modal-input {
-    background: var(--bg3);
-    border: none;
-    border-radius: 10px;
-    padding: 12px 14px;
-    font-size: 14px;
-    color: var(--text);
-    font-family: monospace;
-    width: 100%;
-    outline: none;
-    -webkit-appearance: none;
-  }
-  .modal-footer {
-    display: flex;
-    gap: 12px;
-    padding: 4px 16px 8px;
-  }
-  .modal-footer .btn-primary,
-  .modal-footer .btn-secondary {
-    max-width: none;
-    flex: 1;
-    padding: 14px 8px;
-    font-size: 15px;
-  }
+  .cv-loading-text { font-size: 15px; color: var(--text2); }
 
   /* ── Toast ── */
   #toast {
@@ -426,10 +283,7 @@
     white-space: nowrap;
     z-index: 100;
   }
-  #toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   input[type=file] { display: none; }
 </style>
@@ -440,9 +294,9 @@
   <!-- Capture -->
   <div id="screen-capture" class="screen active">
     <div class="header">
-      <button class="header-btn" onclick="openSettings()">⚙️</button>
+      <span style="min-width:44px"></span>
       <h1>レシートスキャナー</h1>
-      <button class="header-btn" onclick="exportCSV()" title="CSV出力">📊</button>
+      <span style="min-width:44px"></span>
     </div>
     <div class="capture-body">
       <div class="capture-icon">🧾</div>
@@ -507,8 +361,7 @@
         </div>
         <div class="meta-row">
           <span class="meta-label">金額（税込）</span>
-          <input type="text" inputmode="numeric" pattern="[0-9]*" id="meta-amount" class="meta-input" placeholder="例：420" oninput="refreshFilename()" onchange="refreshFilename()">
-          <button class="ocr-btn" id="ocr-btn" onclick="runOCR()">🔍 認識</button>
+          <input type="text" inputmode="numeric" pattern="[0-9]*" id="meta-amount" class="meta-input" placeholder="任意" oninput="refreshFilename()" onchange="refreshFilename()">
         </div>
         <div class="meta-row">
           <span class="meta-label">ファイル名</span>
@@ -516,34 +369,12 @@
         </div>
       </div>
       <div class="result-btns">
-        <button id="btn-save" class="btn-primary" onclick="saveImage()" disabled>💾 保存</button>
+        <button id="btn-save" class="btn-primary" onclick="saveImage()" disabled>💾 Dropboxに保存</button>
       </div>
       <div class="hint" id="save-hint"></div>
-      <div id="ocr-progress" class="hint"></div>
     </div>
   </div>
 
-</div>
-
-<!-- Settings Modal -->
-<div id="modal-settings" class="modal-overlay hidden">
-  <div class="modal-box">
-    <div class="modal-header">
-      <span class="modal-title">⚙️ 設定</span>
-      <button class="header-btn" onclick="closeSettings()">✕</button>
-    </div>
-    <div class="modal-body">
-      <p class="modal-desc">Gemini APIキーを設定すると、レシートの<strong>日付・金額・店舗名</strong>を高精度で自動認識します（無料）。</p>
-      <a class="modal-link" href="https://aistudio.google.com/app/apikey" target="_blank">→ Google AI Studio で無料APIキーを取得</a>
-      <span class="modal-label">Gemini APIキー</span>
-      <input type="password" id="input-apikey" class="modal-input" placeholder="AIzaSy..." autocomplete="off" spellcheck="false">
-      <p id="apikey-status" style="font-size:12px;color:var(--text3);min-height:16px"></p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="closeSettings()">キャンセル</button>
-      <button class="btn-primary" onclick="saveSettings()">保存</button>
-    </div>
-  </div>
 </div>
 
 <!-- Loading overlay -->
@@ -561,11 +392,9 @@
 <script>
 // ── State ──
 let srcImage = null;
-let corners = [];       // [{x,y}, ...] 4 points in canvas coords
-let dragIdx = -1;
+let corners  = [];
+let dragIdx  = -1;
 let adjustScale = 1;
-let adjustOffX = 0;
-let adjustOffY = 0;
 let cvReady = false;
 
 // ── OpenCV load ──
@@ -573,7 +402,6 @@ function onCvReady() {
   cvReady = true;
   document.getElementById('cv-overlay').classList.add('hidden');
 }
-
 function waitForCv() {
   const timer = setInterval(() => {
     if (typeof cv !== 'undefined' && typeof cv.Mat === 'function') {
@@ -582,21 +410,19 @@ function waitForCv() {
     }
   }, 200);
 }
-
 function retryLoadCV() {
   document.getElementById('cv-msg').textContent = 'OpenCV 読み込み中...';
   document.getElementById('cv-retry-btn').style.display = 'none';
   document.getElementById('cv-spinner').style.display = '';
   loadOpenCV();
 }
-
 function loadOpenCV() {
   const s = document.createElement('script');
   s.async = true;
   s.src = 'https://cdn.jsdelivr.net/npm/@techstark/opencv-js@4.8.0-release.1/dist/opencv.js';
   s.onload = () => waitForCv();
   s.onerror = () => {
-    document.getElementById('cv-msg').textContent = 'OpenCV 読み込み失敗。ネット接続を確認して再試行してください。';
+    document.getElementById('cv-msg').textContent = 'OpenCV 読み込み失敗。再試行してください。';
     document.getElementById('cv-spinner').style.display = 'none';
     document.getElementById('cv-retry-btn').style.display = '';
   };
@@ -616,7 +442,6 @@ function goResult()  { showScreen('screen-result'); initResultForm(); }
 // ── File inputs ──
 document.getElementById('input-camera').addEventListener('change', onFileSelected);
 document.getElementById('input-library').addEventListener('change', onFileSelected);
-
 function triggerCamera()  { document.getElementById('input-camera').click(); }
 function triggerLibrary() { document.getElementById('input-library').click(); }
 
@@ -636,82 +461,55 @@ function onFileSelected(e) {
   img.src = url;
 }
 
-// ── Adjust screen setup ──
+// ── Adjust screen ──
 function initAdjust(img) {
   const canvas = document.getElementById('canvas-adjust');
   const wrap = canvas.parentElement;
   const maxW = wrap.clientWidth;
   const maxH = wrap.clientHeight;
   const scale = Math.min(maxW / img.width, maxH / img.height, 1);
-  const dw = Math.round(img.width * scale);
+  const dw = Math.round(img.width  * scale);
   const dh = Math.round(img.height * scale);
   canvas.width  = dw;
   canvas.height = dh;
   adjustScale = scale;
-  adjustOffX = (maxW - dw) / 2;
-  adjustOffY = (maxH - dh) / 2;
-
-  const detected = detectReceipt(img, dw, dh);
-  corners = detected;
+  corners = detectReceipt(img, dw, dh);
   drawHandles(canvas, img);
 }
 
-// ── Edge detection ──
+// ── Receipt detection ──
 function detectReceipt(img, dw, dh) {
   const fallback = [
-    {x: dw*0.05, y: dh*0.05},
-    {x: dw*0.95, y: dh*0.05},
-    {x: dw*0.95, y: dh*0.95},
-    {x: dw*0.05, y: dh*0.95},
+    {x: dw*0.05, y: dh*0.05}, {x: dw*0.95, y: dh*0.05},
+    {x: dw*0.95, y: dh*0.95}, {x: dw*0.05, y: dh*0.95},
   ];
-
-  // 検出は600px以下にリサイズして処理
   const MAX = 600;
   const sc  = Math.min(MAX / dw, MAX / dh, 1);
   const tw  = Math.round(dw * sc);
   const th  = Math.round(dh * sc);
-
   let src, gray, binary, kernel, contours, hierarchy;
   try {
-    src      = cv.imread(drawImgToOffscreen(img, tw, th));
-    gray     = new cv.Mat();
-    binary   = new cv.Mat();
-    contours = new cv.MatVector();
-    hierarchy = new cv.Mat();
-
+    src = cv.imread(drawImgToOffscreen(img, tw, th));
+    gray = new cv.Mat(); binary = new cv.Mat();
+    contours = new cv.MatVector(); hierarchy = new cv.Mat();
     cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
     cv.GaussianBlur(gray, gray, new cv.Size(7, 7), 0);
-
-    // OTSUで自動二値化（明るいレシート vs 暗い背景）
     cv.threshold(gray, binary, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU);
-
-    // 背景が明るい場合は反転（レシートを白に）
     const mean = cv.mean(binary);
     if (mean[0] > 127) cv.bitwise_not(binary, binary);
-
-    // モルフォロジーでノイズ除去・穴埋め
     kernel = cv.Mat.ones(5, 5, cv.CV_8U);
     cv.morphologyEx(binary, binary, cv.MORPH_CLOSE, kernel);
     cv.morphologyEx(binary, binary, cv.MORPH_OPEN,  kernel);
-
     cv.findContours(binary, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
-
-    // 最大面積の輪郭を選択
     let maxArea = 0, maxIdx = -1;
     for (let i = 0; i < contours.size(); i++) {
       const a = cv.contourArea(contours.get(i));
       if (a > maxArea) { maxArea = a; maxIdx = i; }
     }
-
     if (maxIdx < 0 || maxArea < tw * th * 0.08) return fallback;
-
-    const cnt = contours.get(maxIdx);
-
-    // 凸包で滑らかな輪郭を取得
+    const cnt  = contours.get(maxIdx);
     const hull = new cv.Mat();
     cv.convexHull(cnt, hull, false, true);
-
-    // 複数epsilonで4頂点近似
     const peri = cv.arcLength(hull, true);
     let bestQuad = null;
     for (const eps of [0.02, 0.04, 0.06, 0.08, 0.1, 0.15]) {
@@ -721,16 +519,11 @@ function detectReceipt(img, dw, dh) {
       approx.delete();
     }
     hull.delete();
-
     if (!bestQuad) return fallback;
-
     const inv = dw / tw;
     const pts = [];
     for (let i = 0; i < 4; i++) {
-      pts.push({
-        x: bestQuad.data32S[i*2]   * inv,
-        y: bestQuad.data32S[i*2+1] * inv,
-      });
+      pts.push({ x: bestQuad.data32S[i*2] * inv, y: bestQuad.data32S[i*2+1] * inv });
     }
     bestQuad.delete();
     return pts;
@@ -758,8 +551,6 @@ function drawHandles(canvas, img) {
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-  // polygon
   ctx.beginPath();
   ctx.moveTo(corners[0].x, corners[0].y);
   for (let i = 1; i < corners.length; i++) ctx.lineTo(corners[i].x, corners[i].y);
@@ -769,12 +560,9 @@ function drawHandles(canvas, img) {
   ctx.stroke();
   ctx.fillStyle = 'rgba(10,132,255,0.12)';
   ctx.fill();
-
-  // handles
-  const R = 16;
-  corners.forEach((p, i) => {
+  corners.forEach(p => {
     ctx.beginPath();
-    ctx.arc(p.x, p.y, R, 0, Math.PI*2);
+    ctx.arc(p.x, p.y, 16, 0, Math.PI*2);
     ctx.fillStyle = '#0A84FF';
     ctx.fill();
     ctx.strokeStyle = '#fff';
@@ -785,7 +573,6 @@ function drawHandles(canvas, img) {
 
 // ── Touch drag ──
 const adjustCanvas = document.getElementById('canvas-adjust');
-
 adjustCanvas.addEventListener('touchstart', onTouchStart, {passive: false});
 adjustCanvas.addEventListener('touchmove',  onTouchMove,  {passive: false});
 adjustCanvas.addEventListener('touchend',   onTouchEnd,   {passive: false});
@@ -797,7 +584,6 @@ function canvasPos(canvas, touch) {
     y: (touch.clientY - r.top)  * (canvas.height / r.height),
   };
 }
-
 function onTouchStart(e) {
   e.preventDefault();
   const pos = canvasPos(this, e.touches[0]);
@@ -808,7 +594,6 @@ function onTouchStart(e) {
   });
   if (minD > 60) dragIdx = -1;
 }
-
 function onTouchMove(e) {
   e.preventDefault();
   if (dragIdx < 0) return;
@@ -819,107 +604,69 @@ function onTouchMove(e) {
   };
   drawHandles(this, srcImage);
 }
-
-function onTouchEnd(e) {
-  e.preventDefault();
-  dragIdx = -1;
-}
+function onTouchEnd(e) { e.preventDefault(); dragIdx = -1; }
 
 // ── Order corners ──
 function orderCorners(pts) {
   const cx = pts.reduce((s, p) => s + p.x, 0) / 4;
   const cy = pts.reduce((s, p) => s + p.y, 0) / 4;
-  const tl = pts.filter(p => p.x < cx && p.y < cy);
-  const tr = pts.filter(p => p.x >= cx && p.y < cy);
-  const br = pts.filter(p => p.x >= cx && p.y >= cy);
-  const bl = pts.filter(p => p.x < cx && p.y >= cy);
-  const pick = (arr, fallback) => arr.length ? arr[0] : fallback;
+  const pick = (arr, fb) => arr.length ? arr[0] : fb;
   return [
-    pick(tl, {x:0, y:0}),
-    pick(tr, {x:pts[0].x, y:0}),
-    pick(br, {x:pts[0].x, y:pts[0].y}),
-    pick(bl, {x:0, y:pts[0].y}),
+    pick(pts.filter(p => p.x < cx && p.y < cy),  {x:0, y:0}),
+    pick(pts.filter(p => p.x >= cx && p.y < cy), {x:pts[0].x, y:0}),
+    pick(pts.filter(p => p.x >= cx && p.y >= cy),{x:pts[0].x, y:pts[0].y}),
+    pick(pts.filter(p => p.x < cx && p.y >= cy), {x:0, y:pts[0].y}),
   ];
 }
-
 function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
 
 // ── Perspective correction ──
 function applyPerspective() {
   if (!cvReady) { toast('OpenCV がまだ準備中です'); return; }
-
-  const scale = adjustScale;
-  const rawPts = corners.map(p => ({ x: p.x / scale, y: p.y / scale }));
+  const rawPts = corners.map(p => ({ x: p.x / adjustScale, y: p.y / adjustScale }));
   const [tl, tr, br, bl] = orderCorners(rawPts);
-
-  const wTop    = dist(tl, tr);
-  const wBottom = dist(bl, br);
-  const hLeft   = dist(tl, bl);
-  const hRight  = dist(tr, br);
-  const outW = Math.round(Math.max(wTop, wBottom));
-  const outH = Math.round(Math.max(hLeft, hRight));
-
+  const outW = Math.round(Math.max(dist(tl,tr), dist(bl,br)));
+  const outH = Math.round(Math.max(dist(tl,bl), dist(tr,br)));
   let srcMat, dstMat, srcPts, dstPts, M;
   try {
-    const oc = drawImgToOffscreen(srcImage, srcImage.width, srcImage.height);
-    srcMat = cv.imread(oc);
-
-    srcPts = cv.matFromArray(4, 1, cv.CV_32FC2, [
-      tl.x, tl.y, tr.x, tr.y, br.x, br.y, bl.x, bl.y,
-    ]);
-    dstPts = cv.matFromArray(4, 1, cv.CV_32FC2, [
-      0, 0, outW, 0, outW, outH, 0, outH,
-    ]);
+    srcMat = cv.imread(drawImgToOffscreen(srcImage, srcImage.width, srcImage.height));
+    srcPts = cv.matFromArray(4, 1, cv.CV_32FC2, [tl.x,tl.y, tr.x,tr.y, br.x,br.y, bl.x,bl.y]);
+    dstPts = cv.matFromArray(4, 1, cv.CV_32FC2, [0,0, outW,0, outW,outH, 0,outH]);
     M = cv.getPerspectiveTransform(srcPts, dstPts);
     dstMat = new cv.Mat();
     cv.warpPerspective(srcMat, dstMat, M, new cv.Size(outW, outH), cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar());
-
-    const resultCanvas = document.getElementById('canvas-result');
-    resultCanvas.width  = outW;
-    resultCanvas.height = outH;
-    cv.imshow(resultCanvas, dstMat);
-
+    const rc = document.getElementById('canvas-result');
+    rc.width = outW; rc.height = outH;
+    cv.imshow(rc, dstMat);
     goResult();
-    updateShareHint();
   } catch(e) {
     toast('補正に失敗しました: ' + e.message);
   } finally {
-    if (srcMat) srcMat.delete();
-    if (dstMat) dstMat.delete();
-    if (srcPts) srcPts.delete();
-    if (dstPts) dstPts.delete();
-    if (M)      M.delete();
+    if (srcMat) srcMat.delete(); if (dstMat) dstMat.delete();
+    if (srcPts) srcPts.delete(); if (dstPts) dstPts.delete();
+    if (M) M.delete();
   }
 }
 
-// ── カテゴリ定義 ──
+// ── Metadata form ──
 const CATS_PERSONAL = ['外食', '食材', '消耗品', '交際費', '嗜好品'];
 const CATS_EXPENSE  = ['会議費', '接待交際費', '消耗品費', '広告宣伝費', '新聞図書費', '雑費', '通信費', '旅費交通費', 'その他'];
 
 function updateCategoryOptions() {
   const isExp = document.getElementById('meta-expense').checked;
-  const cats  = isExp ? CATS_EXPENSE : CATS_PERSONAL;
   const sel   = document.getElementById('meta-category');
-  sel.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
+  sel.innerHTML = (isExp ? CATS_EXPENSE : CATS_PERSONAL)
+    .map(c => `<option value="${c}">${c}</option>`).join('');
 }
-
-function onExpenseChange() {
-  updateCategoryOptions();
-  refreshFilename();
-}
+function onExpenseChange() { updateCategoryOptions(); refreshFilename(); }
 
 function buildFilename() {
   const raw = document.getElementById('meta-date').value || '';
-  const yy  = raw.slice(2, 4);
-  const mm  = raw.slice(5, 7);
-  const dd  = raw.slice(8, 10);
-  const dt  = yy + mm + dd;                                        // YYMMDD
+  const dt  = raw.slice(2,4) + raw.slice(5,7) + raw.slice(8,10);
   const cat = document.getElementById('meta-category').value || '';
   const pay = document.getElementById('meta-payment').value  || '';
   const amt = document.getElementById('meta-amount').value.trim();
   const exp = document.getElementById('meta-expense').checked;
-
-  // 例: 260502_経費_外食_PayPay_1700.jpg
   const parts = [dt];
   if (exp) parts.push('経費');
   parts.push(cat);
@@ -932,211 +679,44 @@ function refreshFilename() {
   document.getElementById('meta-filename').value = buildFilename();
   validateSaveBtn();
 }
-
 function validateSaveBtn() {
-  const fn = document.getElementById('meta-filename').value.trim();
-  document.getElementById('btn-save').disabled = !fn;
-}
-
-function updateShareHint() {
-  document.getElementById('save-hint').textContent =
-    typeof navigator.share === 'function'
-      ? '共有シートの「ファイルに保存」でDropboxフォルダを選択できます'
-      : '「保存」をタップするとファイルがダウンロードされます';
+  document.getElementById('btn-save').disabled =
+    !document.getElementById('meta-filename').value.trim();
 }
 
 function initResultForm() {
   const t = new Date();
-  document.getElementById('meta-date').value    = t.toLocaleDateString('sv');  // YYYY-MM-DD
-  document.getElementById('meta-amount').value  = '';
+  document.getElementById('meta-date').value     = t.toLocaleDateString('sv');
+  document.getElementById('meta-amount').value   = '';
   document.getElementById('meta-expense').checked = false;
-  document.getElementById('meta-payment').value = 'PayPay';
-  updateCategoryOptions();   // デフォルト: 外食
+  document.getElementById('meta-payment').value  = 'PayPay';
+  updateCategoryOptions();
   refreshFilename();
-  updateShareHint();
+  document.getElementById('save-hint').textContent =
+    typeof navigator.share === 'function'
+      ? '共有シートの「Dropboxに保存」を選択してください'
+      : '「保存」をタップするとファイルがダウンロードされます';
 }
 
-// ── 保存 ──
+// ── Save ──
 function saveImage() {
   const filename = document.getElementById('meta-filename').value.trim() || buildFilename();
-
-  // toDataURL は同期的 → iOS の navigator.share ユーザージェスチャ制限を回避できる
-  const canvas  = document.getElementById('canvas-result');
-  const dataURL = canvas.toDataURL('image/jpeg', 0.92);
-  const bin     = atob(dataURL.split(',')[1]);
-  const ab      = new ArrayBuffer(bin.length);
-  const ia      = new Uint8Array(ab);
+  const canvas   = document.getElementById('canvas-result');
+  const dataURL  = canvas.toDataURL('image/jpeg', 0.92);
+  const bin = atob(dataURL.split(',')[1]);
+  const ab  = new ArrayBuffer(bin.length);
+  const ia  = new Uint8Array(ab);
   for (let i = 0; i < bin.length; i++) ia[i] = bin.charCodeAt(i);
   const blob = new Blob([ab], { type: 'image/jpeg' });
-
-  appendRecord();   // CSV に自動追記
-
   const file = new File([blob], filename, { type: 'image/jpeg' });
+
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
     navigator.share({ files: [file] })
-      .then(() => toast('共有しました'))
+      .then(() => toast('保存しました'))
       .catch(e => { if (e.name !== 'AbortError') fallbackDownload(blob, filename); });
   } else {
     fallbackDownload(blob, filename);
   }
-}
-
-// ── Settings ──
-const SETTINGS_KEY = 'app_settings';
-function getSettings() {
-  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}'); }
-  catch { return {}; }
-}
-function getApiKey() { return getSettings().geminiKey || ''; }
-
-function openSettings() {
-  const key = getApiKey();
-  document.getElementById('input-apikey').value = key;
-  document.getElementById('apikey-status').textContent =
-    key ? '✅ APIキーが設定されています' : '';
-  document.getElementById('modal-settings').classList.remove('hidden');
-}
-function closeSettings() {
-  document.getElementById('modal-settings').classList.add('hidden');
-}
-function saveSettings() {
-  const key = document.getElementById('input-apikey').value.trim();
-  const s = getSettings();
-  s.geminiKey = key;
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
-  closeSettings();
-  toast(key ? '✅ APIキーを保存しました' : 'APIキーを削除しました');
-}
-
-// ── OCR ──
-async function runOCR() {
-  const btn  = document.getElementById('ocr-btn');
-  const prog = document.getElementById('ocr-progress');
-  btn.disabled = true;
-  btn.textContent = '…';
-
-  const canvas = document.getElementById('canvas-result');
-  const apiKey = getApiKey();
-
-  if (!apiKey) {
-    prog.textContent = '⚙️ APIキー未設定 — 画面左上の⚙️から設定してください';
-    setTimeout(() => { prog.textContent = ''; }, 6000);
-    btn.disabled = false;
-    btn.textContent = '🔍 認識';
-    return;
-  }
-
-  prog.textContent = 'Gemini AIで解析中…';
-  try {
-    const result = await callGeminiOCR(canvas, apiKey);
-    const filled = [];
-
-    if (result.amount != null) {
-      document.getElementById('meta-amount').value = String(result.amount);
-      filled.push(`¥${parseInt(result.amount).toLocaleString()}`);
-    }
-    if (result.date) {
-      document.getElementById('meta-date').value = result.date;
-      filled.push(result.date);
-    }
-    refreshFilename();
-
-    prog.textContent = filled.length
-      ? `認識完了 ✓ ${filled.join(' · ')}`
-      : '認識できませんでした。手動で入力してください。';
-    setTimeout(() => { prog.textContent = ''; }, 5000);
-  } catch(e) {
-    const msg = e.message.includes('API_KEY_INVALID')
-      ? 'APIキーが無効です。⚙️から確認してください。'
-      : '失敗: ' + e.message;
-    prog.textContent = msg;
-    setTimeout(() => { prog.textContent = ''; }, 7000);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '🔍 認識';
-  }
-}
-
-async function callGeminiOCR(canvas, apiKey) {
-  // 画像をbase64に変換（最大1200px幅に縮小してAPI負荷を下げる）
-  const maxW = 1200;
-  const scale = Math.min(1, maxW / canvas.width);
-  const oc = document.createElement('canvas');
-  oc.width  = Math.round(canvas.width  * scale);
-  oc.height = Math.round(canvas.height * scale);
-  oc.getContext('2d').drawImage(canvas, 0, 0, oc.width, oc.height);
-  const base64 = oc.toDataURL('image/jpeg', 0.85).split(',')[1];
-
-  const prompt =
-    'このレシート画像を読み取り、次のJSONだけを返してください（説明・コードブロック不要）:\n' +
-    '{"amount": 税込合計金額(整数), "date": "YYYY-MM-DD", "store": "店舗名"}\n' +
-    '不明な項目はnullにしてください。';
-
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [
-          { text: prompt },
-          { inline_data: { mime_type: 'image/jpeg', data: base64 } }
-        ]}],
-        generationConfig: { temperature: 0, maxOutputTokens: 256 }
-      })
-    }
-  );
-
-  const data = await res.json();
-  if (!res.ok) {
-    const msg = data.error?.message || `HTTP ${res.status}`;
-    throw new Error(msg);
-  }
-
-  const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-  const m   = raw.match(/\{[\s\S]*?\}/);
-  if (!m) throw new Error('レスポンスを解析できませんでした');
-  return JSON.parse(m[0]);
-}
-
-// ── CSV ──
-const CSV_KEY = 'receipt_records';
-
-function loadRecords() {
-  try { return JSON.parse(localStorage.getItem(CSV_KEY) || '[]'); }
-  catch { return []; }
-}
-
-function appendRecord() {
-  const records = loadRecords();
-  records.push({
-    date:     document.getElementById('meta-date').value     || '',
-    expense:  document.getElementById('meta-expense').checked ? '○' : '',
-    category: document.getElementById('meta-category').value  || '',
-    payment:  document.getElementById('meta-payment').value   || '',
-    amount:   document.getElementById('meta-amount').value.trim(),
-    filename: document.getElementById('meta-filename').value.trim(),
-    savedAt:  new Date().toISOString().slice(0, 16).replace('T', ' '),
-  });
-  localStorage.setItem(CSV_KEY, JSON.stringify(records));
-}
-
-function exportCSV() {
-  const records = loadRecords();
-  if (!records.length) { toast('保存済みデータがありません'); return; }
-
-  const headers = ['日付', '経費', '内容', '支払い', '金額', 'ファイル名', '保存日時'];
-  const rows = records.map(r =>
-    [r.date, r.expense, r.category, r.payment, r.amount, r.filename, r.savedAt]
-  );
-  const csv = [headers, ...rows]
-    .map(row => row.map(c => `"${String(c ?? '').replace(/"/g, '""')}"`).join(','))
-    .join('\r\n');
-
-  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
-  const name = `receipts_${new Date().toLocaleDateString('sv').replace(/-/g, '')}.csv`;
-  fallbackDownload(blob, name);
-  toast(`${records.length}件のデータをエクスポート`);
 }
 
 function fallbackDownload(blob, filename) {
