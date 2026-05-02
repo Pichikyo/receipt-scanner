@@ -473,6 +473,15 @@
             <span class="folder-val" id="dbx-folder-display">未設定</span>
             <span class="chevron">›</span>
           </div>
+          <div class="meta-row" id="dbx-link-row" style="gap:8px">
+            <input type="text" id="dbx-link-input" class="meta-input"
+              placeholder="パス or Dropboxリンクを貼る"
+              style="font-size:13px;text-align:left"
+              autocorrect="off" autocapitalize="off" spellcheck="false"
+              onkeydown="if(event.key==='Enter'){setFolderFromLink();this.blur();}">
+            <button onclick="setFolderFromLink()"
+              style="flex-shrink:0;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:14px;font-family:inherit;cursor:pointer;">設定</button>
+          </div>
         </div>
         <div class="dbx-actions">
           <button id="dbx-connect-btn" class="btn-primary" onclick="connectDropbox()">🔗 Dropboxに接続</button>
@@ -1095,6 +1104,59 @@ function renderFolderList(folders){
       <span class="folder-item-chevron">›</span>
     </div>`;
   }).join('');
+}
+
+// ── Set folder from link / path input ──
+async function setFolderFromLink(){
+  const input=document.getElementById('dbx-link-input').value.trim();
+  if(!input) return;
+  const btn=document.querySelector('#dbx-link-row button');
+  let path='';
+
+  if(input.startsWith('https://')){
+    // Dropbox share link → resolve via API
+    if(!isDropboxConnected()){toast('先にDropboxに接続してください');return;}
+    const orig=btn.textContent;
+    btn.textContent='…'; btn.disabled=true;
+    try{path=await resolveDropboxLink(input);}
+    catch(e){toast('❌ '+e.message); btn.textContent=orig; btn.disabled=false; return;}
+    btn.textContent=orig; btn.disabled=false;
+  } else if(/dropbox/i.test(input)&&(input.startsWith('/')||input.startsWith('C:'))){
+    // macOS / Windows filesystem path → strip everything up to and including the Dropbox folder
+    path=extractDropboxPath(input);
+  } else {
+    // Direct Dropbox API path
+    path=input.startsWith('/')?input:'/'+input;
+  }
+
+  path=path.replace(/\/+$/,''); // remove trailing slash
+  localStorage.setItem(LS_FOLDER, path);
+  document.getElementById('dbx-link-input').value='';
+  updateDropboxUI();
+  toast('✅ フォルダ設定: '+folderDisplayName(path));
+}
+
+async function resolveDropboxLink(url){
+  const token=await getValidAccessToken();
+  if(!token) throw new Error('接続が必要です');
+  const res=await fetch('https://api.dropboxapi.com/2/sharing/get_shared_link_metadata',{
+    method:'POST',
+    headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+    body:JSON.stringify({url}),
+  });
+  const data=await res.json();
+  if(!res.ok) throw new Error(data.error_summary||'リンク解析エラー');
+  const p=data.path_display||data.path_lower;
+  if(!p) throw new Error('パスを取得できませんでした');
+  return p;
+}
+
+function extractDropboxPath(macPath){
+  // '/Users/pichikyo/toomo Dropbox/HIGASHI Tomomi/...' → '/HIGASHI Tomomi/...'
+  const parts=macPath.split('/');
+  const idx=parts.findIndex(p=>/dropbox/i.test(p));
+  if(idx>=0&&idx<parts.length-1) return '/'+parts.slice(idx+1).join('/');
+  return macPath;
 }
 
 // ── Init ──
