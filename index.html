@@ -786,6 +786,9 @@ async function saveImage(){
   const blob=new Blob([ab],{type:'image/jpeg'});
 
   if(isDropboxConnected()){
+    if(localStorage.getItem(LS_FOLDER)===null){
+      toast('⚙️ 設定からフォルダを選んでください'); openSettings(); return;
+    }
     const btn=document.getElementById('btn-save');
     btn.disabled=true; btn.textContent='⏳ アップロード中...';
     try{
@@ -986,7 +989,7 @@ function jsonAscii(obj){
 async function uploadToDropbox(blob,filename){
   const token=await getValidAccessToken();
   if(!token) throw new Error('再接続してください');
-  const stored=localStorage.getItem(LS_FOLDER)||'';
+  const stored=localStorage.getItem(LS_FOLDER)??'';
   // Build Dropbox path: '' → '/file.jpg',  '/folder' → '/folder/file.jpg'
   const base=(stored===''||stored==='/')?'':stored.replace(/\/+$/,'');
   const path=base+'/'+filename;
@@ -1139,13 +1142,21 @@ async function setFolderFromLink(){
 async function resolveDropboxLink(url){
   const token=await getValidAccessToken();
   if(!token) throw new Error('接続が必要です');
+
+  // /scl/fo/ 形式（新形式フォルダリンク）はAPIが非対応 → フォルダブラウザを案内
+  if(url.includes('/scl/fo/')){
+    throw new Error('フォルダリンクは非対応。下の「保存フォルダ」から選んでください');
+  }
+
+  // rlkey等を除いた基本URLを試す
+  const cleanUrl = url.split('?')[0];
   const res=await fetch('https://api.dropboxapi.com/2/sharing/get_shared_link_metadata',{
     method:'POST',
     headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-    body:JSON.stringify({url}),
+    body:JSON.stringify({url: cleanUrl}),
   });
   const data=await res.json();
-  if(!res.ok) throw new Error(data.error_summary||'リンク解析エラー');
+  if(!res.ok) throw new Error('リンク解析エラー。「保存フォルダ」から直接選んでください');
   const p=data.path_display||data.path_lower;
   if(!p) throw new Error('パスを取得できませんでした');
   return p;
@@ -1160,6 +1171,8 @@ function extractDropboxPath(macPath){
 }
 
 // ── Init ──
+// /receipts は存在しないデフォルト値なので削除
+if(localStorage.getItem(LS_FOLDER)==='/receipts') localStorage.removeItem(LS_FOLDER);
 handleOAuthCallback();
 updateDropboxUI();
 </script>
