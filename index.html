@@ -177,9 +177,9 @@
   .result-canvas-wrap {
     flex: 1; overflow: hidden;
     display: flex; align-items: center; justify-content: center;
-    background: #111;
+    background: #111; touch-action: none;
   }
-  #canvas-result { max-width: 100%; max-height: 100%; object-fit: contain; }
+  #canvas-result { max-width: 100%; max-height: 100%; object-fit: contain; touch-action: none; transform-origin: center center; transition: none; }
   .result-footer {
     background: var(--bg);
     padding: 12px 16px calc(16px + var(--safe-bottom));
@@ -558,7 +558,7 @@ function showScreen(id) {
 }
 function goCapture() { showScreen('screen-capture'); }
 function goAdjust()  { showScreen('screen-adjust'); }
-function goResult()  { showScreen('screen-result'); initResultForm(); }
+function goResult()  { showScreen('screen-result'); initResultForm(); resetResultZoom(); }
 
 // ── File inputs ──
 document.getElementById('input-camera').addEventListener('change', onFileSelected);
@@ -1170,6 +1170,56 @@ function extractDropboxPath(macPath){
   if(idx>=0&&idx<parts.length-1) return '/'+parts.slice(idx+1).join('/');
   return macPath;
 }
+
+// ── Result canvas: ピンチズーム＆パン ──
+let rzScale=1, rzX=0, rzY=0;
+let rzInitScale=1, rzInitDist=0, rzInitX=0, rzInitY=0;
+let rzPrevTouch=null, rzLastTap=0;
+
+function resetResultZoom(){
+  rzScale=1; rzX=0; rzY=0;
+  applyResultTransform();
+}
+function applyResultTransform(){
+  document.getElementById('canvas-result').style.transform=
+    `translate(${rzX}px,${rzY}px) scale(${rzScale})`;
+}
+function ptDist(a,b){ return Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY); }
+
+const rcv=document.getElementById('canvas-result');
+rcv.addEventListener('touchstart', e=>{
+  e.preventDefault();
+  if(e.touches.length===2){
+    rzInitDist=ptDist(e.touches[0],e.touches[1]);
+    rzInitScale=rzScale;
+    rzInitX=rzX; rzInitY=rzY;
+  } else if(e.touches.length===1){
+    rzPrevTouch=e.touches[0];
+    // ダブルタップ検出
+    const now=Date.now();
+    if(now-rzLastTap<280){ resetResultZoom(); }
+    rzLastTap=now;
+  }
+},{passive:false});
+
+rcv.addEventListener('touchmove', e=>{
+  e.preventDefault();
+  if(e.touches.length===2){
+    const d=ptDist(e.touches[0],e.touches[1]);
+    rzScale=Math.max(0.5, Math.min(6, rzInitScale*(d/rzInitDist)));
+    applyResultTransform();
+  } else if(e.touches.length===1 && rzPrevTouch){
+    rzX+=e.touches[0].clientX-rzPrevTouch.clientX;
+    rzY+=e.touches[0].clientY-rzPrevTouch.clientY;
+    rzPrevTouch=e.touches[0];
+    applyResultTransform();
+  }
+},{passive:false});
+
+rcv.addEventListener('touchend', e=>{
+  e.preventDefault();
+  if(e.touches.length===0) rzPrevTouch=null;
+},{passive:false});
 
 // ── Init ──
 // /receipts は存在しないデフォルト値なので削除
