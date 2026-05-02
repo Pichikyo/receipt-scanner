@@ -266,9 +266,9 @@
   }
   .meta-input::placeholder { color: var(--text3); }
   .meta-input[type="date"] { color-scheme: dark; }
-  .meta-input[type="number"] { -moz-appearance: textfield; }
-  .meta-input[type="number"]::-webkit-outer-spin-button,
-  .meta-input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .meta-input[inputmode="numeric"] { -moz-appearance: textfield; }
+  .meta-input[inputmode="numeric"]::-webkit-outer-spin-button,
+  .meta-input[inputmode="numeric"]::-webkit-inner-spin-button { -webkit-appearance: none; }
   .meta-select {
     -webkit-appearance: none;
     appearance: none;
@@ -410,6 +410,13 @@
           <input type="date" id="meta-date" class="meta-input" oninput="refreshFilename()">
         </div>
         <div class="meta-row">
+          <span class="meta-label">経費</span>
+          <label class="toggle-wrap">
+            <input type="checkbox" id="meta-expense" class="toggle-input" onchange="onExpenseChange()">
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+        <div class="meta-row">
           <span class="meta-label">内容</span>
           <select id="meta-category" class="meta-select" onchange="refreshFilename()"></select>
         </div>
@@ -424,14 +431,7 @@
         </div>
         <div class="meta-row">
           <span class="meta-label">金額（税込）</span>
-          <input type="number" id="meta-amount" class="meta-input" placeholder="例：420" oninput="refreshFilename()">
-        </div>
-        <div class="meta-row">
-          <span class="meta-label">経費</span>
-          <label class="toggle-wrap">
-            <input type="checkbox" id="meta-expense" class="toggle-input" onchange="onExpenseChange()">
-            <span class="toggle-track"></span>
-          </label>
+          <input type="text" inputmode="numeric" pattern="[0-9]*" id="meta-amount" class="meta-input" placeholder="例：420" oninput="refreshFilename()" onchange="refreshFilename()">
         </div>
         <div class="meta-row">
           <span class="meta-label">ファイル名</span>
@@ -846,8 +846,6 @@ function updateShareHint() {
       : '「保存」をタップするとファイルがダウンロードされます';
 }
 
-let _cachedBlob = null;
-
 function initResultForm() {
   const t = new Date();
   document.getElementById('meta-date').value    = t.toLocaleDateString('sv');  // YYYY-MM-DD
@@ -857,36 +855,28 @@ function initResultForm() {
   updateCategoryOptions();   // デフォルト: 外食
   refreshFilename();
   updateShareHint();
-
-  // 保存ボタン押下時にすぐ使えるようblobを事前生成
-  _cachedBlob = null;
-  document.getElementById('canvas-result').toBlob(b => { _cachedBlob = b; }, 'image/jpeg', 0.92);
 }
 
 // ── 保存 ──
 function saveImage() {
   const filename = document.getElementById('meta-filename').value.trim() || buildFilename();
 
-  function doSave(blob) {
-    // iOSはnavigator.share({files})で共有シートを使う
-    if (typeof navigator.share === 'function') {
-      const f = new File([blob], filename, { type: 'image/jpeg' });
-      navigator.share({ files: [f] })
-        .then(() => toast('共有しました'))
-        .catch(e => { if (e.name !== 'AbortError') fallbackDownload(blob, filename); });
-    } else {
-      fallbackDownload(blob, filename);
-    }
-  }
+  // toDataURL は同期的 → iOS の navigator.share ユーザージェスチャ制限を回避できる
+  const canvas  = document.getElementById('canvas-result');
+  const dataURL = canvas.toDataURL('image/jpeg', 0.92);
+  const bin     = atob(dataURL.split(',')[1]);
+  const ab      = new ArrayBuffer(bin.length);
+  const ia      = new Uint8Array(ab);
+  for (let i = 0; i < bin.length; i++) ia[i] = bin.charCodeAt(i);
+  const blob = new Blob([ab], { type: 'image/jpeg' });
 
-  if (_cachedBlob) {
-    doSave(_cachedBlob);
+  const file = new File([blob], filename, { type: 'image/jpeg' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    navigator.share({ files: [file] })
+      .then(() => toast('共有しました'))
+      .catch(e => { if (e.name !== 'AbortError') fallbackDownload(blob, filename); });
   } else {
-    // blobがまだ無ければ再生成してから保存
-    document.getElementById('canvas-result').toBlob(b => {
-      _cachedBlob = b;
-      doSave(b);
-    }, 'image/jpeg', 0.92);
+    fallbackDownload(blob, filename);
   }
 }
 
