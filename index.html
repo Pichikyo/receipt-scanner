@@ -462,71 +462,81 @@ function detectReceipt(img, dw, dh) {
     {x: dw*0.05, y: dh*0.95},
   ];
 
-  let src, gray, blur, edges, dilated, kernel, contours, hierarchy;
+  // 検出は600px以下にリサイズして処理
+  const MAX = 600;
+  const sc  = Math.min(MAX / dw, MAX / dh, 1);
+  const tw  = Math.round(dw * sc);
+  const th  = Math.round(dh * sc);
+
+  let src, gray, binary, kernel, contours, hierarchy;
   try {
-    src = cv.imread(drawImgToOffscreen(img, dw, dh));
-    gray = new cv.Mat();
-    blur = new cv.Mat();
-    edges = new cv.Mat();
-    dilated = new cv.Mat();
+    src      = cv.imread(drawImgToOffscreen(img, tw, th));
+    gray     = new cv.Mat();
+    binary   = new cv.Mat();
     contours = new cv.MatVector();
     hierarchy = new cv.Mat();
 
     cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-    cv.GaussianBlur(gray, blur, new cv.Size(5, 5), 0);
-    // 低めの閾値でエッジを検出
-    cv.Canny(blur, edges, 30, 100);
-    // エッジを膨張させて途切れを補完
-    kernel = cv.Mat.ones(3, 3, cv.CV_8U);
-    cv.dilate(edges, dilated, kernel);
+    cv.GaussianBlur(gray, gray, new cv.Size(7, 7), 0);
 
-    cv.findContours(dilated, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+    // OTSUで自動二値化（明るいレシート vs 暗い背景）
+    cv.threshold(gray, binary, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU);
 
-    let bestArea = 0;
-    let bestQuad = null;
+    // 背景が明るい場合は反転（レシートを白に）
+    const mean = cv.mean(binary);
+    if (mean[0] > 127) cv.bitwise_not(binary, binary);
 
+    // モルフォロジーでノイズ除去・穴埋め
+    kernel = cv.Mat.ones(5, 5, cv.CV_8U);
+    cv.morphologyEx(binary, binary, cv.MORPH_CLOSE, kernel);
+    cv.morphologyEx(binary, binary, cv.MORPH_OPEN,  kernel);
+
+    cv.findContours(binary, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+
+    // 最大面積の輪郭を選択
+    let maxArea = 0, maxIdx = -1;
     for (let i = 0; i < contours.size(); i++) {
-      const c = contours.get(i);
-      const area = cv.contourArea(c);
-      if (area < dw * dh * 0.08) { c.delete(); continue; }
-
-      const peri = cv.arcLength(c, true);
-      // 複数のepsilonを試して4頂点近似を探す
-      let quad = null;
-      for (const eps of [0.02, 0.03, 0.04, 0.06, 0.08, 0.1]) {
-        const approx = new cv.Mat();
-        cv.approxPolyDP(c, approx, eps * peri, true);
-        if (approx.rows === 4) { quad = approx; break; }
-        approx.delete();
-      }
-
-      if (quad && area > bestArea) {
-        bestArea = area;
-        if (bestQuad) bestQuad.delete();
-        bestQuad = quad;
-      } else if (quad) {
-        quad.delete();
-      }
-      c.delete();
+      const a = cv.contourArea(contours.get(i));
+      if (a > maxArea) { maxArea = a; maxIdx = i; }
     }
 
-    if (bestQuad) {
-      const pts = [];
-      for (let i = 0; i < 4; i++) {
-        pts.push({ x: bestQuad.data32S[i*2], y: bestQuad.data32S[i*2+1] });
-      }
-      bestQuad.delete();
-      return pts;
+    if (maxIdx < 0 || maxArea < tw * th * 0.08) return fallback;
+
+    const cnt = contours.get(maxIdx);
+
+    // 凸包で滑らかな輪郭を取得
+    const hull = new cv.Mat();
+    cv.convexHull(cnt, hull, false, true);
+
+    // 複数epsilonで4頂点近似
+    const peri = cv.arcLength(hull, true);
+    let bestQuad = null;
+    for (const eps of [0.02, 0.04, 0.06, 0.08, 0.1, 0.15]) {
+      const approx = new cv.Mat();
+      cv.approxPolyDP(hull, approx, eps * peri, true);
+      if (approx.rows === 4) { bestQuad = approx; break; }
+      approx.delete();
     }
-    return fallback;
+    hull.delete();
+
+    if (!bestQuad) return fallback;
+
+    const inv = dw / tw;
+    const pts = [];
+    for (let i = 0; i < 4; i++) {
+      pts.push({
+        x: bestQuad.data32S[i*2]   * inv,
+        y: bestQuad.data32S[i*2+1] * inv,
+      });
+    }
+    bestQuad.delete();
+    return pts;
   } catch(e) {
     return fallback;
   } finally {
     if (src)       src.delete();
     if (gray)      gray.delete();
-    if (blur)      blur.delete();
-    if (edges)     edges.delete();
-    if (dilated)   dilated.delete();
+    if (binary)    binary.delete();
     if (kernel)    kernel.delete();
     if (contours)  contours.delete();
     if (hierarchy) hierarchy.delete();
