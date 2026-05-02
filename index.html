@@ -12,6 +12,7 @@
 
   :root {
     --blue: #0A84FF;
+    --green: #34C759;
     --bg: #1C1C1E;
     --bg2: #2C2C2E;
     --bg3: #3A3A3C;
@@ -71,6 +72,31 @@
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
+  .header-icon-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    padding: 6px;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+  }
+  .dbx-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    display: none;
+  }
+  .dbx-dot.visible { display: block; }
 
   /* ── Capture ── */
   #screen-capture { justify-content: flex-start; }
@@ -116,6 +142,7 @@
     transition: opacity 0.15s;
   }
   .btn-primary:active { opacity: 0.75; }
+  .btn-primary:disabled { opacity: 0.45; }
   .btn-secondary {
     background: var(--bg3);
     color: var(--text);
@@ -285,6 +312,64 @@
   }
   #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+  /* ── Settings Modal ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 300;
+    display: flex;
+    align-items: flex-end;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s;
+  }
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .modal-sheet {
+    width: 100%;
+    background: var(--bg2);
+    border-radius: 18px 18px 0 0;
+    padding-bottom: calc(24px + var(--safe-bottom));
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .modal-overlay.open .modal-sheet {
+    transform: translateY(0);
+  }
+  .modal-drag-handle {
+    width: 36px; height: 4px;
+    background: var(--bg3);
+    border-radius: 2px;
+    margin: 10px auto 0;
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 10px;
+    border-bottom: 0.5px solid var(--sep);
+  }
+  .modal-header h2 { font-size: 17px; font-weight: 600; }
+  .modal-body { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+  .setting-section-title {
+    font-size: 13px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0 2px 6px;
+  }
+  .dbx-status-badge {
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: auto;
+  }
+  .dbx-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  .dbx-actions .btn-primary,
+  .dbx-actions .btn-secondary { max-width: none; min-height: 48px; font-size: 16px; }
+
   input[type=file] { display: none; }
 </style>
 </head>
@@ -296,7 +381,10 @@
     <div class="header">
       <span style="min-width:44px"></span>
       <h1>ぴちきょレシートスキャナ</h1>
-      <span style="min-width:44px"></span>
+      <button class="header-icon-btn" onclick="openSettings()" aria-label="設定">
+        ⚙️
+        <span class="dbx-dot" id="dbx-header-dot"></span>
+      </button>
     </div>
     <div class="capture-body">
       <div class="capture-icon">🧾</div>
@@ -369,7 +457,7 @@
         </div>
       </div>
       <div class="result-btns">
-        <button id="btn-save" class="btn-primary" onclick="saveImage()" disabled>💾 Dropboxに保存</button>
+        <button id="btn-save" class="btn-primary" onclick="saveImage()" disabled>💾 保存</button>
       </div>
       <div class="hint" id="save-hint"></div>
     </div>
@@ -385,6 +473,36 @@
 </div>
 
 <div id="toast"></div>
+
+<!-- Settings Modal -->
+<div id="modal-settings" class="modal-overlay" onclick="onModalOverlayClick(event)">
+  <div class="modal-sheet">
+    <div class="modal-drag-handle"></div>
+    <div class="modal-header">
+      <h2>設定</h2>
+      <button class="header-btn" onclick="closeSettings()">完了</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="setting-section-title">Dropbox 連携</div>
+        <div class="meta-form">
+          <div class="meta-row">
+            <span class="meta-label">状態</span>
+            <span class="dbx-status-badge" id="dbx-status">未接続</span>
+          </div>
+          <div class="meta-row" id="dbx-folder-row">
+            <span class="meta-label">保存フォルダ</span>
+            <input type="text" id="dbx-folder" class="meta-input" placeholder="/receipts" autocorrect="off" autocapitalize="off" spellcheck="false">
+          </div>
+        </div>
+        <div class="dbx-actions">
+          <button id="dbx-connect-btn" class="btn-primary" onclick="connectDropbox()">🔗 Dropboxに接続</button>
+          <button id="dbx-disconnect-btn" class="btn-secondary" onclick="disconnectDropbox()" style="display:none">切断</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <input type="file" id="input-camera" accept="image/*" capture="environment">
 <input type="file" id="input-library" accept="image/*">
@@ -692,14 +810,11 @@ function initResultForm() {
   document.getElementById('meta-payment').value  = 'PayPay';
   updateCategoryOptions();
   refreshFilename();
-  document.getElementById('save-hint').textContent =
-    typeof navigator.share === 'function'
-      ? '共有シートの「Dropboxに保存」を選択してください'
-      : '「保存」をタップするとファイルがダウンロードされます';
+  updateSaveHint();
 }
 
 // ── Save ──
-function saveImage() {
+async function saveImage() {
   const filename = document.getElementById('meta-filename').value.trim() || buildFilename();
   const canvas   = document.getElementById('canvas-result');
   const dataURL  = canvas.toDataURL('image/jpeg', 0.92);
@@ -708,8 +823,26 @@ function saveImage() {
   const ia  = new Uint8Array(ab);
   for (let i = 0; i < bin.length; i++) ia[i] = bin.charCodeAt(i);
   const blob = new Blob([ab], { type: 'image/jpeg' });
-  const file = new File([blob], filename, { type: 'image/jpeg' });
 
+  // Try Dropbox if connected
+  if (isDropboxConnected()) {
+    const btn = document.getElementById('btn-save');
+    btn.disabled = true;
+    btn.textContent = '⏳ アップロード中...';
+    try {
+      await uploadToDropbox(blob, filename);
+      toast('✅ Dropboxに保存しました！');
+    } catch(e) {
+      toast('❌ ' + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '💾 Dropboxに保存';
+    }
+    return;
+  }
+
+  // Fallback: Share Sheet or download
+  const file = new File([blob], filename, { type: 'image/jpeg' });
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
     navigator.share({ files: [file] })
       .then(() => toast('保存しました'))
@@ -736,6 +869,258 @@ function toast(msg, duration = 2500) {
   clearTimeout(toast._t);
   toast._t = setTimeout(() => el.classList.remove('show'), duration);
 }
+
+// ══════════════════════════════════════
+// ── Dropbox PKCE OAuth ──
+// ══════════════════════════════════════
+const DBX_APP_KEY    = '4zwufvbj01zcg6r';
+const DBX_REDIRECT   = 'https://pichikyo.github.io/receipt-scanner/';
+const DBX_AUTH_URL   = 'https://www.dropbox.com/oauth2/authorize';
+const DBX_TOKEN_URL  = 'https://api.dropboxapi.com/oauth2/token';
+const DBX_UPLOAD_URL = 'https://content.dropboxapi.com/2/files/upload';
+
+const LS_ACCESS  = 'dbx_access_token';
+const LS_REFRESH = 'dbx_refresh_token';
+const LS_EXPIRY  = 'dbx_expires_at';
+const LS_FOLDER  = 'dbx_folder';
+
+// PKCE helpers
+function b64urlEncode(buf) {
+  return btoa(String.fromCharCode(...new Uint8Array(buf)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+}
+async function sha256buf(str) {
+  const enc = new TextEncoder().encode(str);
+  return crypto.subtle.digest('SHA-256', enc);
+}
+
+async function connectDropbox() {
+  // Save folder path before navigating away
+  const folderInput = document.getElementById('dbx-folder');
+  const folder = folderInput.value.trim() || '/receipts';
+  localStorage.setItem(LS_FOLDER, folder);
+
+  // Generate PKCE verifier (43–128 chars, base64url safe)
+  const verifier = b64urlEncode(crypto.getRandomValues(new Uint8Array(32)));
+  localStorage.setItem('dbx_verifier', verifier);
+
+  // Generate challenge = BASE64URL(SHA256(verifier))
+  const challenge = b64urlEncode(await sha256buf(verifier));
+
+  // CSRF state
+  const state = b64urlEncode(crypto.getRandomValues(new Uint8Array(16)));
+  localStorage.setItem('dbx_state', state);
+
+  const params = new URLSearchParams({
+    client_id:             DBX_APP_KEY,
+    response_type:         'code',
+    redirect_uri:          DBX_REDIRECT,
+    code_challenge:        challenge,
+    code_challenge_method: 'S256',
+    token_access_type:     'offline',
+    state,
+  });
+
+  window.location.href = DBX_AUTH_URL + '?' + params.toString();
+}
+
+async function handleOAuthCallback() {
+  const params = new URLSearchParams(window.location.search);
+  const code  = params.get('code');
+  const state = params.get('state');
+  if (!code) return;
+
+  // Clean URL immediately
+  window.history.replaceState({}, document.title, DBX_REDIRECT);
+
+  // Verify state
+  const savedState = localStorage.getItem('dbx_state');
+  if (state !== savedState) {
+    toast('認証エラー: state不一致');
+    return;
+  }
+
+  const verifier = localStorage.getItem('dbx_verifier');
+  if (!verifier) {
+    toast('認証エラー: verifier不明');
+    return;
+  }
+
+  const body = new URLSearchParams({
+    code,
+    grant_type:    'authorization_code',
+    client_id:     DBX_APP_KEY,
+    redirect_uri:  DBX_REDIRECT,
+    code_verifier: verifier,
+  });
+
+  try {
+    const res  = await fetch(DBX_TOKEN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error_description || data.error || 'token error');
+
+    localStorage.setItem(LS_ACCESS, data.access_token);
+    if (data.refresh_token) localStorage.setItem(LS_REFRESH, data.refresh_token);
+    if (data.expires_in)    localStorage.setItem(LS_EXPIRY, String(Date.now() + data.expires_in * 1000));
+
+    localStorage.removeItem('dbx_verifier');
+    localStorage.removeItem('dbx_state');
+
+    toast('✅ Dropboxに接続しました！');
+  } catch(e) {
+    toast('Dropbox認証エラー: ' + e.message);
+  }
+
+  updateDropboxUI();
+}
+
+async function getValidAccessToken() {
+  const access  = localStorage.getItem(LS_ACCESS);
+  const expiry  = parseInt(localStorage.getItem(LS_EXPIRY) || '0', 10);
+  const refresh = localStorage.getItem(LS_REFRESH);
+  if (!access) return null;
+
+  // Refresh 5 min before expiry
+  if (refresh && expiry && Date.now() > expiry - 5 * 60 * 1000) {
+    const body = new URLSearchParams({
+      grant_type:    'refresh_token',
+      refresh_token: refresh,
+      client_id:     DBX_APP_KEY,
+    });
+    try {
+      const res  = await fetch(DBX_TOKEN_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body,
+      });
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem(LS_ACCESS, data.access_token);
+        if (data.expires_in) localStorage.setItem(LS_EXPIRY, String(Date.now() + data.expires_in * 1000));
+        return data.access_token;
+      }
+    } catch(e) { /* fall through */ }
+    // Refresh failed — clear tokens
+    clearDropboxTokens();
+    updateDropboxUI();
+    return null;
+  }
+
+  return access;
+}
+
+function isDropboxConnected() {
+  return !!localStorage.getItem(LS_ACCESS);
+}
+
+function clearDropboxTokens() {
+  localStorage.removeItem(LS_ACCESS);
+  localStorage.removeItem(LS_REFRESH);
+  localStorage.removeItem(LS_EXPIRY);
+}
+
+function disconnectDropbox() {
+  clearDropboxTokens();
+  updateDropboxUI();
+  toast('Dropboxから切断しました');
+}
+
+function updateDropboxUI() {
+  const connected  = isDropboxConnected();
+  const statusEl   = document.getElementById('dbx-status');
+  const connectBtn = document.getElementById('dbx-connect-btn');
+  const disconnBtn = document.getElementById('dbx-disconnect-btn');
+  const dot        = document.getElementById('dbx-header-dot');
+
+  if (statusEl) {
+    if (connected) {
+      statusEl.textContent  = '✅ 接続済み';
+      statusEl.style.color  = 'var(--green)';
+    } else {
+      statusEl.textContent  = '未接続';
+      statusEl.style.color  = 'var(--text3)';
+    }
+  }
+  if (connectBtn) connectBtn.style.display = connected ? 'none' : '';
+  if (disconnBtn) disconnBtn.style.display = connected ? ''     : 'none';
+  if (dot)        dot.classList.toggle('visible', connected);
+
+  updateSaveHint();
+  updateSaveBtn();
+}
+
+function updateSaveHint() {
+  const hint = document.getElementById('save-hint');
+  if (!hint) return;
+  if (isDropboxConnected()) {
+    const folder = localStorage.getItem(LS_FOLDER) || '/receipts';
+    hint.textContent = `Dropbox「${folder}」に保存します`;
+  } else {
+    hint.textContent = typeof navigator.share === 'function'
+      ? '共有シートの「Dropboxに保存」を選択してください'
+      : '「保存」をタップするとファイルがダウンロードされます';
+  }
+}
+
+function updateSaveBtn() {
+  const btn = document.getElementById('btn-save');
+  if (!btn) return;
+  btn.textContent = isDropboxConnected() ? '💾 Dropboxに保存' : '💾 保存';
+}
+
+async function uploadToDropbox(blob, filename) {
+  const token = await getValidAccessToken();
+  if (!token) throw new Error('再接続してください');
+
+  const folder = (localStorage.getItem(LS_FOLDER) || '/receipts').replace(/\/+$/, '');
+  const path   = folder + '/' + filename;
+
+  const res = await fetch(DBX_UPLOAD_URL, {
+    method: 'POST',
+    headers: {
+      'Authorization':   'Bearer ' + token,
+      'Content-Type':    'application/octet-stream',
+      'Dropbox-API-Arg': JSON.stringify({ path, mode: 'add', autorename: true, mute: false }),
+    },
+    body: blob,
+  });
+
+  if (!res.ok) {
+    let msg = 'アップロード失敗';
+    try { const e = await res.json(); msg = e.error_summary || msg; } catch(_) {}
+    throw new Error(msg);
+  }
+  return res.json();
+}
+
+// ── Settings modal ──
+function openSettings() {
+  // Pre-fill folder from storage
+  const saved = localStorage.getItem(LS_FOLDER) || '/receipts';
+  document.getElementById('dbx-folder').value = saved;
+  updateDropboxUI();
+  document.getElementById('modal-settings').classList.add('open');
+}
+
+function closeSettings() {
+  // Save folder path on close
+  const folder = document.getElementById('dbx-folder').value.trim() || '/receipts';
+  localStorage.setItem(LS_FOLDER, folder);
+  document.getElementById('modal-settings').classList.remove('open');
+  updateSaveHint();
+}
+
+function onModalOverlayClick(e) {
+  if (e.target === document.getElementById('modal-settings')) closeSettings();
+}
+
+// ── Init ──
+handleOAuthCallback();   // process ?code= if present
+updateDropboxUI();       // refresh UI from stored tokens
 </script>
 </body>
 </html>
